@@ -1,4 +1,4 @@
-﻿<#
+<#
     .SYNOPSIS
     Short function to list organizations the user has access to which will be needed to use with other commands within this module.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -80,7 +80,7 @@ param(
     [Alias('API')]
     [string[]]$ApiKey,
 
-    [Parameter(Mandatory=$false,
+    [Parameter(Mandatory=$True,
                 ValueFromPipeline=$True,
                 HelpMessage="Enter your Organisation ID.")]
     [Alias('OrgID')]
@@ -98,36 +98,34 @@ BEGIN {}
         "licenseState" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/licenseState"
     }
 
-    $Organisations = Invoke-RestMethod -Method GET -Uri $Uri.endPoint -Headers @{
+    $licenseStates = Invoke-RestMethod -Method GET -Uri $Uri.licenseState -Headers @{
         'OrganisationID' = "$OrganizationId"
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
         'Content-Type' = 'application/json'
     }
 
-    foreach( $Organisation in $Organisations ) {
-        $Org = $Organisation | Select-Object -Property *
+    foreach( $licenseState in $licenseStates ) {
+        $Lic = $licenseState | Select-Object -Property *
 
     try {
-    		$OrgProperties = @{
-            ID = $Org.id
-            Name = $Org.name
-            SAMLUrl = $Org.samlConsumerUrl
-            SAMLUrls = $Org.samlConsumerUrls
-            }
-        }
-    catch {
-    	    $OrgProperties = @{
-            ID = $Org.id
-            Name = $Org.name
-            SAMLUrl = $Org.samlConsumerUrl
-            SAMLUrls = $Org.samlConsumerUrls
-            }
-        }
-	finally {
-            $obj = New-Object -TypeName PSObject -Property $OrgProperties
-		    Write-Output $obj
-		    }
+        $LicProperties = @{
+        status = $Lic.status
+        expirationDate = $Lic.expirationDate
+        licensedDeviceCounts = $Lic.licensedDeviceCounts
         }
     }
+    catch {
+        $LicProperties = @{
+        status = $Lic.status
+        expirationDate = $Lic.expirationDate
+        licensedDeviceCounts = $Lic.licensedDeviceCounts
+        }
+    }
+    finally {
+        $obj = New-Object -TypeName PSObject -Property $LicProperties
+        Write-Output $obj
+        }
+    }
+}
 
 END {}
