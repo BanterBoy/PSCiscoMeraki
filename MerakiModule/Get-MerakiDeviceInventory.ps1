@@ -1,10 +1,10 @@
 <#
     .SYNOPSIS
-    Short function to list organizations licences.
+    Short function to provide an inventory of all Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
 
     .DESCRIPTION
-    Short function to list organizations licences.
+    Short function to provide an inventory of all Meraki Devices.
 
     This function queries the Cisco Meraki API service https://dashboard.meraki.com/api/v0 and will be needed for use with additional
     commands within the module.
@@ -26,22 +26,32 @@
 
     .OUTPUTS
     The output from the API is sent as JSON and captured in a custom object.
-    {
-        "status": "OK",
-        "expirationDate": "Feb 3, 2018 UTC",
-        "licensedDeviceCounts": {
-            "MS220-8P": 30,
-            "MX65W": 2,
-            "SM": 100,
-            "wireless": 95,
-            "MX64W": 2,
-            "MX65": 6,
-            "MC": 7,
-            "Z1": 1,
-            "MX64": 1,
-            "MV": 4
+    [
+        {
+            "mac": "00:18:0a:4e:78:0c",
+            "serial": "Q2JN-QP7J-VW8J",
+            "networkId": "L_694117292568478178",
+            "model": "MX100",
+            "claimedAt": "1476691740.28085",
+            "publicIp": "194.74.170.115"
+        },
+        {
+            "mac": "00:18:0a:6f:70:eb",
+            "serial": "Q2GD-6M6C-QBMK",
+            "networkId": "L_694117292568478178",
+            "model": "MR18",
+            "claimedAt": "1457009523.49881",
+            "publicIp": "194.74.170.115"
+        },
+        {
+            "mac": "0c:8d:db:5e:34:42",
+            "serial": "Q2QD-PDZR-X93A",
+            "networkId": "L_694117292568478178",
+            "model": "MR74",
+            "claimedAt": "1496310866.85687",
+            "publicIp": "194.74.170.115"
         }
-    }
+    ]
 
     You can then select the items that you want to display.
 
@@ -80,35 +90,38 @@ BEGIN {}
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
-        "endPoint" = 'https://api.meraki.com/api/v0/organizations'
-        "licenseState" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/licenseState"
+        "inventory" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/inventory"
     }
 
-    $licenseStates = Invoke-RestMethod -Method GET -Uri $Uri.licenseState -Headers @{
-        'OrganisationID' = "$OrganizationId"
+    $inventory = Invoke-RestMethod -Method GET -Uri $Uri.inventory -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
         'Content-Type' = 'application/json'
     }
 
-    foreach( $licenseState in $licenseStates ) {
-        $Lic = $licenseState | Select-Object -Property *
-
+    foreach( $item in $inventory ) {
+        $Device = $item | Select-Object -Property *
     try {
-        $LicProperties = @{
-        status = $Lic.status
-        expirationDate = $Lic.expirationDate
-        licensedDeviceCounts = $Lic.licensedDeviceCounts
+        $DeviceProperties = @{
+            mac = $Device.mac
+            serial = $Device.serial
+            networkId = $Device.networkId
+            model = $Device.model
+            claimedAt = $Device.claimedAt
+            publicIp = $Device.publicIp
         }
     }
     catch {
-        $LicProperties = @{
-        status = $Lic.status
-        expirationDate = $Lic.expirationDate
-        licensedDeviceCounts = $Lic.licensedDeviceCounts
+        $DeviceProperties = @{
+            mac = $Device.mac
+            serial = $Device.serial
+            networkId = $Device.networkId
+            model = $Device.model
+            claimedAt = $Device.claimedAt
+            publicIp = $Device.publicIp
         }
     }
     finally {
-        $obj = New-Object -TypeName PSObject -Property $LicProperties
+        $obj = New-Object -TypeName PSObject -Property $DeviceProperties
         Write-Output $obj
         }
     }

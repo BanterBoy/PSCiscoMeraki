@@ -1,10 +1,10 @@
 <#
     .SYNOPSIS
-    Short function to list organizations licences.
+    Short function to provide third Party VPN Peer Details.
     In order to use this Module you will need an API Key from your Dashboard.
 
     .DESCRIPTION
-    Short function to list organizations licences.
+    Short function to provide third Party VPN Peer Details.
 
     This function queries the Cisco Meraki API service https://dashboard.meraki.com/api/v0 and will be needed for use with additional
     commands within the module.
@@ -26,22 +26,16 @@
 
     .OUTPUTS
     The output from the API is sent as JSON and captured in a custom object.
-    {
-        "status": "OK",
-        "expirationDate": "Feb 3, 2018 UTC",
-        "licensedDeviceCounts": {
-            "MS220-8P": 30,
-            "MX65W": 2,
-            "SM": 100,
-            "wireless": 95,
-            "MX64W": 2,
-            "MX65": 6,
-            "MC": 7,
-            "Z1": 1,
-            "MX64": 1,
-            "MV": 4
+    [
+        {
+            "name":"Your peer",
+            "publicIp":"192.168.0.1",
+            "privateSubnets":[
+                "172.168.0.0/16",
+                "172.169.0.0/16"],
+            "secret":"asdf1234"
         }
-    }
+    ]
 
     You can then select the items that you want to display.
 
@@ -80,35 +74,34 @@ BEGIN {}
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
-        "endPoint" = 'https://api.meraki.com/api/v0/organizations'
-        "licenseState" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/licenseState"
+        "thirdPartyVPNPeers" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/thirdPartyVPNPeers"
     }
 
-    $licenseStates = Invoke-RestMethod -Method GET -Uri $Uri.licenseState -Headers @{
-        'OrganisationID' = "$OrganizationId"
+    $thirdPartyVPNPeers = Invoke-RestMethod -Method GET -Uri $Uri.thirdPartyVPNPeers -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
         'Content-Type' = 'application/json'
     }
 
-    foreach( $licenseState in $licenseStates ) {
-        $Lic = $licenseState | Select-Object -Property *
-
+    foreach( $item in $thirdPartyVPNPeers ) {
+        $Settings = $item | Select-Object -Property *
     try {
-        $LicProperties = @{
-        status = $Lic.status
-        expirationDate = $Lic.expirationDate
-        licensedDeviceCounts = $Lic.licensedDeviceCounts
+        $thirdPartyVPNPeersProperties = @{
+            name = $Settings.name
+            publicIp = $Settings.publicIp
+            privateSubnets = $Settings.privateSubnets
+            secret = $Settings.secret
         }
     }
     catch {
-        $LicProperties = @{
-        status = $Lic.status
-        expirationDate = $Lic.expirationDate
-        licensedDeviceCounts = $Lic.licensedDeviceCounts
+        $thirdPartyVPNPeersProperties = @{
+            name = $Settings.name
+            publicIp = $Settings.publicIp
+            privateSubnets = $Settings.privateSubnets
+            secret = $Settings.secret
         }
     }
     finally {
-        $obj = New-Object -TypeName PSObject -Property $LicProperties
+        $obj = New-Object -TypeName PSObject -Property $thirdPartyVPNPeersProperties
         Write-Output $obj
         }
     }

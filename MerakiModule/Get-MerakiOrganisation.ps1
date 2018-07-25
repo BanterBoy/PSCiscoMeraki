@@ -47,14 +47,15 @@
 
     .INPUTS
     Accepts Api Key as piped input.
+    Accepts Organisation ID as piped input.
 
     .OUTPUTS
     The output from the API is sent as JSON and captured in a custom object.
     {
-    "id": 549236,
-    "name": "Meraki Live Sandbox",
-    "samlConsumerUrl": "https://n149.meraki.com/saml/login/-t35Mb/TvUzhbJtIRna",
-    "samlConsumerUrls": ["https://n149.meraki.com/saml/login/-t35Mb/TvUzhbJtIRna"]
+        "id": 549236,
+        "name": "Meraki Live Sandbox",
+        "samlConsumerUrl": "https://n149.meraki.com/saml/login/-t35Mb/TvUzhbJtIRna",
+        "samlConsumerUrls": ["https://n149.meraki.com/saml/login/-t35Mb/TvUzhbJtIRna"]
     }
 
     You can then select the items that you want to display.
@@ -85,7 +86,6 @@ param(
                 HelpMessage="Enter your Organisation ID.")]
     [Alias('OrgID')]
     [string[]]$OrganisationID
-
 )
 
 BEGIN {}
@@ -94,12 +94,10 @@ BEGIN {}
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
-        "endPoint" = 'https://api.meraki.com/api/v0/organizations'
-        "licenseState" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/licenseState"
+        "organisation" = 'https://api.meraki.com/api/v0/organizations'
     }
 
-    $Organisations = Invoke-RestMethod -Method GET -Uri $Uri.endPoint -Headers @{
-        'OrganisationID' = "$OrganizationId"
+    $Organisations = Invoke-RestMethod -Method GET -Uri $Uri.organisation -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
         'Content-Type' = 'application/json'
     }

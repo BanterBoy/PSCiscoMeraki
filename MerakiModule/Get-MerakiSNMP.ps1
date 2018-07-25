@@ -1,10 +1,10 @@
 <#
     .SYNOPSIS
-    Short function to list organizations licences.
+    Short function to provide SNMP Details.
     In order to use this Module you will need an API Key from your Dashboard.
 
     .DESCRIPTION
-    Short function to list organizations licences.
+    Short function to provide SNMP Details.
 
     This function queries the Cisco Meraki API service https://dashboard.meraki.com/api/v0 and will be needed for use with additional
     commands within the module.
@@ -27,20 +27,14 @@
     .OUTPUTS
     The output from the API is sent as JSON and captured in a custom object.
     {
-        "status": "OK",
-        "expirationDate": "Feb 3, 2018 UTC",
-        "licensedDeviceCounts": {
-            "MS220-8P": 30,
-            "MX65W": 2,
-            "SM": 100,
-            "wireless": 95,
-            "MX64W": 2,
-            "MX65": 6,
-            "MC": 7,
-            "Z1": 1,
-            "MX64": 1,
-            "MV": 4
-        }
+        "v2cEnabled": true,
+        "v3Enabled": false,
+        "v3AuthMode": null,
+        "v3PrivMode": null,
+        "peerIps": null,
+        "v2CommunityString": "o/-t35Mb",
+        "hostname": "n149.meraki.com",
+        "port": 16100
     }
 
     You can then select the items that you want to display.
@@ -80,35 +74,40 @@ BEGIN {}
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
-        "endPoint" = 'https://api.meraki.com/api/v0/organizations'
-        "licenseState" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/licenseState"
+        "snmp" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/snmp"
     }
 
-    $licenseStates = Invoke-RestMethod -Method GET -Uri $Uri.licenseState -Headers @{
-        'OrganisationID' = "$OrganizationId"
+    $SNMP = Invoke-RestMethod -Method GET -Uri $Uri.snmp -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
         'Content-Type' = 'application/json'
     }
 
-    foreach( $licenseState in $licenseStates ) {
-        $Lic = $licenseState | Select-Object -Property *
-
+    foreach( $item in $SNMP ) {
+        $Settings = $item | Select-Object -Property *
     try {
-        $LicProperties = @{
-        status = $Lic.status
-        expirationDate = $Lic.expirationDate
-        licensedDeviceCounts = $Lic.licensedDeviceCounts
+        $SNMPProperties = @{
+            v2cEnabled = $Settings.v2cEnabled
+            v3Enabled = $Settings.v3Enabled
+            v3AuthMode = $Settings.v3AuthMode
+            v3PrivMode = $Settings.v3PrivMode
+            peerIps = $Settings.peerIps
+            hostname = $Settings.hostname
+            port = $Settings.port
         }
     }
     catch {
-        $LicProperties = @{
-        status = $Lic.status
-        expirationDate = $Lic.expirationDate
-        licensedDeviceCounts = $Lic.licensedDeviceCounts
+        $SNMPProperties = @{
+            v2cEnabled = $Settings.v2cEnabled
+            v3Enabled = $Settings.v3Enabled
+            v3AuthMode = $Settings.v3AuthMode
+            v3PrivMode = $Settings.v3PrivMode
+            peerIps = $Settings.peerIps
+            hostname = $Settings.hostname
+            port = $Settings.port
         }
     }
     finally {
-        $obj = New-Object -TypeName PSObject -Property $LicProperties
+        $obj = New-Object -TypeName PSObject -Property $SNMPProperties
         Write-Output $obj
         }
     }
