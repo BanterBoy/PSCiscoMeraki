@@ -58,12 +58,6 @@ param(
     [Alias('API')]
     [string[]]$ApiKey,
 
-    [Parameter(Mandatory=$false,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your Organisation ID.")]
-    [Alias('OrgID')]
-    [string[]]$OrganisationID,
-
     [Parameter(Mandatory=$True,
                 ValueFromPipeline=$True,
                 HelpMessage="Enter your Network ID.")]
