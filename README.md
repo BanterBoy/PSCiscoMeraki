@@ -28,3 +28,6 @@ This project is currently "a work in progress" as I am currently working through
 
 ### API Endpoint
 - https://api.meraki.com/api/v0
+
+
+[License](/LICENSE.md)

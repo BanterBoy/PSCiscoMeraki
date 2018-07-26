@@ -4,7 +4,7 @@
     In order to use this Module you will need an API Key from your Dashboard.
 
     .DESCRIPTION
-    Short function to provide third Party VPN Peer Details.
+    Short function to provide a list of networks configured on the Meraki Devices.
 
     This function queries the Cisco Meraki API service https://dashboard.meraki.com/api/v0 and will be needed for use with additional
     commands within the module.
