@@ -1,11 +1,17 @@
+---
+name: README.md
+about: Generic details regarding this project.
+
+---
+
 # CiscoMeraki
 Powershell module to access the Cisco Meraki API to configure your Meraki's
 
 ### Common Variables
-X-Cisco-Meraki-API-Key  
-organizationId  
-networkId  
-baseUrl  
+X-Cisco-Meraki-API-Key
+organizationId
+networkId
+baseUrl
 
 ## CmdLets
 Currently includes the following Cmdlets
