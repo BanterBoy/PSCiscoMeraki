@@ -1,18 +1,30 @@
 # CiscoMeraki
 Powershell module to access the Cisco Meraki API to configure your Meraki's
 
+### Common Variables
+X-Cisco-Meraki-API-Key  
+organizationId  
+networkId  
+baseUrl  
+
+## CmdLets
 Currently includes the following Cmdlets
 
-Get-MerakiDeviceInventory.ps1
+- Get-MerakiDeviceInventory.ps1
+- Get-MerakiDeviceStatus.ps1
+- Get-MerakiLicenceState.ps1
+- Get-MerakiOrganisation.ps1
+- Get-MerakiSNMP.ps1
+- Get-MerakiVPNPeers.ps1
 
-Get-MerakiDeviceStatus.ps1
+This project is currently "a work in progress" as I am currently working through the options that have been exposed via the API.
 
-Get-MerakiLicenceState.ps1
+### API documentation
+- http://meraki.io/
+- https://dashboard.meraki.com/api_docs
 
-Get-MerakiOrganisation.ps1
+### API Postman Collection
+- http://postman.meraki.com/
 
-Get-MerakiSNMP.ps1
-
-Get-MerakiVPNPeers.ps1
-
-A work in progress
+### API Endpoint
+- https://api.meraki.com/api/v0
