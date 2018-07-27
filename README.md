@@ -40,4 +40,4 @@ This project is currently "a work in progress" as I am currently working through
 - https://api.meraki.com/api/v0
 
 
-[License](/LICENSE.md)
+[License](/LICENSE)
