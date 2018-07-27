@@ -70,15 +70,15 @@
 [CmdletBinding()]
 
 param(
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your API Key.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your API Key.")]
     [Alias('API')]
     [string[]]$ApiKey,
 
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your Organisation ID.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your Organisation ID.")]
     [Alias('OrgID')]
     [string[]]$OrganisationID
 
@@ -86,7 +86,7 @@ param(
 
 BEGIN {}
 
-    PROCESS {
+PROCESS {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
@@ -95,34 +95,34 @@ BEGIN {}
 
     $networks = Invoke-RestMethod -Method GET -Uri $Uri.networks -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type' = 'application/json'
+        'Content-Type'           = 'application/json'
     }
 
-    foreach( $item in $networks ) {
+    foreach ( $item in $networks ) {
         $Settings = $item | Select-Object -Property *
-    try {
-        $networksProperties = @{
-            id = $Settings.id
-            organizationId = $Settings.organizationId
-            name = $Settings.name
-            timeZone = $Settings.timeZone
-            tags = $Settings.tags
-            type = $Settings.type
+        try {
+            $networksProperties = @{
+                id             = $Settings.id
+                organizationId = $Settings.organizationId
+                name           = $Settings.name
+                timeZone       = $Settings.timeZone
+                tags           = $Settings.tags
+                type           = $Settings.type
+            }
         }
-    }
-    catch {
-        $networksProperties = @{
-            id = $Settings.id
-            organizationId = $Settings.organizationId
-            name = $Settings.name
-            timeZone = $Settings.timeZone
-            tags = $Settings.tags
-            type = $Settings.type
+        catch {
+            $networksProperties = @{
+                id             = $Settings.id
+                organizationId = $Settings.organizationId
+                name           = $Settings.name
+                timeZone       = $Settings.timeZone
+                tags           = $Settings.tags
+                type           = $Settings.type
+            }
         }
-    }
-    finally {
-        $obj = New-Object -TypeName PSObject -Property $networksProperties
-        Write-Output $obj
+        finally {
+            $obj = New-Object -TypeName PSObject -Property $networksProperties
+            Write-Output $obj
         }
     }
 }

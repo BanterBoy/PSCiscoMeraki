@@ -75,22 +75,22 @@
 [CmdletBinding()]
 
 param(
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your API Key.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your API Key.")]
     [Alias('API')]
     [string[]]$ApiKey,
 
-    [Parameter(Mandatory=$false,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your Organisation ID.")]
+    [Parameter(Mandatory = $false,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your Organisation ID.")]
     [Alias('OrgID')]
     [string[]]$OrganisationID
 )
 
 BEGIN {}
 
-    PROCESS {
+PROCESS {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
@@ -99,33 +99,33 @@ BEGIN {}
 
     $Organisations = Invoke-RestMethod -Method GET -Uri $Uri.organisation -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type' = 'application/json'
+        'Content-Type'           = 'application/json'
     }
 
-    foreach( $Organisation in $Organisations ) {
+    foreach ( $Organisation in $Organisations ) {
         $Org = $Organisation | Select-Object -Property *
 
-    try {
-    		$OrgProperties = @{
-            ID = $Org.id
-            Name = $Org.name
-            SAMLUrl = $Org.samlConsumerUrl
-            SAMLUrls = $Org.samlConsumerUrls
+        try {
+            $OrgProperties = @{
+                ID       = $Org.id
+                Name     = $Org.name
+                SAMLUrl  = $Org.samlConsumerUrl
+                SAMLUrls = $Org.samlConsumerUrls
             }
         }
-    catch {
-    	    $OrgProperties = @{
-            ID = $Org.id
-            Name = $Org.name
-            SAMLUrl = $Org.samlConsumerUrl
-            SAMLUrls = $Org.samlConsumerUrls
+        catch {
+            $OrgProperties = @{
+                ID       = $Org.id
+                Name     = $Org.name
+                SAMLUrl  = $Org.samlConsumerUrl
+                SAMLUrls = $Org.samlConsumerUrls
             }
         }
-	finally {
+        finally {
             $obj = New-Object -TypeName PSObject -Property $OrgProperties
-		    Write-Output $obj
-		    }
+            Write-Output $obj
         }
     }
+}
 
 END {}

@@ -60,15 +60,15 @@
 [CmdletBinding()]
 
 param(
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your API Key.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your API Key.")]
     [Alias('API')]
     [string[]]$ApiKey,
 
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your Organisation ID.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your Organisation ID.")]
     [Alias('OrgID')]
     [string[]]$OrganisationID
 
@@ -76,40 +76,40 @@ param(
 
 BEGIN {}
 
-    PROCESS {
+PROCESS {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
-        "endPoint" = 'https://api.meraki.com/api/v0/organizations'
+        "endPoint"     = 'https://api.meraki.com/api/v0/organizations'
         "licenseState" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/licenseState"
     }
 
     $licenseStates = Invoke-RestMethod -Method GET -Uri $Uri.licenseState -Headers @{
-        'OrganisationID' = "$OrganizationId"
+        'OrganisationID'         = "$OrganizationId"
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type' = 'application/json'
+        'Content-Type'           = 'application/json'
     }
 
-    foreach( $licenseState in $licenseStates ) {
+    foreach ( $licenseState in $licenseStates ) {
         $Lic = $licenseState | Select-Object -Property *
 
-    try {
-        $LicProperties = @{
-        status = $Lic.status
-        expirationDate = $Lic.expirationDate
-        licensedDeviceCounts = $Lic.licensedDeviceCounts
+        try {
+            $LicProperties = @{
+                status               = $Lic.status
+                expirationDate       = $Lic.expirationDate
+                licensedDeviceCounts = $Lic.licensedDeviceCounts
+            }
         }
-    }
-    catch {
-        $LicProperties = @{
-        status = $Lic.status
-        expirationDate = $Lic.expirationDate
-        licensedDeviceCounts = $Lic.licensedDeviceCounts
+        catch {
+            $LicProperties = @{
+                status               = $Lic.status
+                expirationDate       = $Lic.expirationDate
+                licensedDeviceCounts = $Lic.licensedDeviceCounts
+            }
         }
-    }
-    finally {
-        $obj = New-Object -TypeName PSObject -Property $LicProperties
-        Write-Output $obj
+        finally {
+            $obj = New-Object -TypeName PSObject -Property $LicProperties
+            Write-Output $obj
         }
     }
 }

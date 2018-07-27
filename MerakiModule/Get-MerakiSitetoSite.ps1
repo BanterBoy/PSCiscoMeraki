@@ -67,15 +67,15 @@
 [CmdletBinding()]
 
 param(
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your API Key.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your API Key.")]
     [Alias('API')]
     [string[]]$ApiKey,
 
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your Network ID.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your Network ID.")]
     [Alias('NetID')]
     [string[]]$NetworkID
 
@@ -83,7 +83,7 @@ param(
 
 BEGIN {}
 
-    PROCESS {
+PROCESS {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
@@ -92,28 +92,28 @@ BEGIN {}
 
     $siteToSiteVpn = Invoke-RestMethod -Method GET -Uri $Uri.siteToSiteVpn -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type' = 'application/json'
+        'Content-Type'           = 'application/json'
     }
 
-    foreach( $item in $siteToSiteVpn ) {
+    foreach ( $item in $siteToSiteVpn ) {
         $Settings = $item | Select-Object -Property *
-    try {
-        $siteToSiteVpnProperties = @{
-            mode = $Settings.mode
-            hubs = $Settings.hubs
-            subnets = $Settings.subnets
+        try {
+            $siteToSiteVpnProperties = @{
+                mode    = $Settings.mode
+                hubs    = $Settings.hubs
+                subnets = $Settings.subnets
+            }
         }
-    }
-    catch {
-        $siteToSiteVpnProperties = @{
-            mode = $Settings.mode
-            hubs = $Settings.hubs
-            subnets = $Settings.subnets
+        catch {
+            $siteToSiteVpnProperties = @{
+                mode    = $Settings.mode
+                hubs    = $Settings.hubs
+                subnets = $Settings.subnets
+            }
         }
-    }
-    finally {
-        $obj = New-Object -TypeName PSObject -Property $siteToSiteVpnProperties
-        Write-Output $obj
+        finally {
+            $obj = New-Object -TypeName PSObject -Property $siteToSiteVpnProperties
+            Write-Output $obj
         }
     }
 }

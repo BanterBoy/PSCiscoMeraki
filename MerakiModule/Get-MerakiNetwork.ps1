@@ -52,15 +52,15 @@
 [CmdletBinding()]
 
 param(
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your API Key.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your API Key.")]
     [Alias('API')]
     [string[]]$ApiKey,
 
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your Network ID.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your Network ID.")]
     [Alias('NetID')]
     [string[]]$NetworkID
 
@@ -68,7 +68,7 @@ param(
 
 BEGIN {}
 
-    PROCESS {
+PROCESS {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
@@ -77,36 +77,36 @@ BEGIN {}
 
     $networks = Invoke-RestMethod -Method GET -Uri $Uri.networks -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type' = 'application/json'
+        'Content-Type'           = 'application/json'
     }
 
-    foreach( $item in $networks ) {
+    foreach ( $item in $networks ) {
         $Settings = $item | Select-Object -Property *
-    try {
-        $networksProperties = @{
-            disableMyMerakiCom = $Settings.disableMyMerakiCom
-            id = $Settings.id
-            name = $Settings.name
-            organizationId = $Settings.organizationId
-            tags = $Settings.tags
-            timeZone = $Settings.timeZone
-            type = $Settings.type
+        try {
+            $networksProperties = @{
+                disableMyMerakiCom = $Settings.disableMyMerakiCom
+                id                 = $Settings.id
+                name               = $Settings.name
+                organizationId     = $Settings.organizationId
+                tags               = $Settings.tags
+                timeZone           = $Settings.timeZone
+                type               = $Settings.type
+            }
         }
-    }
-    catch {
-        $networksProperties = @{
-            disableMyMerakiCom = $Settings.disableMyMerakiCom
-            id = $Settings.id
-            name = $Settings.name
-            organizationId = $Settings.organizationId
-            tags = $Settings.tags
-            timeZone = $Settings.timeZone
-            type = $Settings.type
+        catch {
+            $networksProperties = @{
+                disableMyMerakiCom = $Settings.disableMyMerakiCom
+                id                 = $Settings.id
+                name               = $Settings.name
+                organizationId     = $Settings.organizationId
+                tags               = $Settings.tags
+                timeZone           = $Settings.timeZone
+                type               = $Settings.type
+            }
         }
-    }
-    finally {
-        $obj = New-Object -TypeName PSObject -Property $networksProperties
-        Write-Output $obj
+        finally {
+            $obj = New-Object -TypeName PSObject -Property $networksProperties
+            Write-Output $obj
         }
     }
 }

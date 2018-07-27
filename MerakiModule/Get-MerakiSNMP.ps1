@@ -54,15 +54,15 @@
 [CmdletBinding()]
 
 param(
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your API Key.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your API Key.")]
     [Alias('API')]
     [string[]]$ApiKey,
 
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your Organisation ID.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your Organisation ID.")]
     [Alias('OrgID')]
     [string[]]$OrganisationID
 
@@ -70,7 +70,7 @@ param(
 
 BEGIN {}
 
-    PROCESS {
+PROCESS {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
@@ -79,36 +79,36 @@ BEGIN {}
 
     $SNMP = Invoke-RestMethod -Method GET -Uri $Uri.snmp -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type' = 'application/json'
+        'Content-Type'           = 'application/json'
     }
 
-    foreach( $item in $SNMP ) {
+    foreach ( $item in $SNMP ) {
         $Settings = $item | Select-Object -Property *
-    try {
-        $SNMPProperties = @{
-            v2cEnabled = $Settings.v2cEnabled
-            v3Enabled = $Settings.v3Enabled
-            v3AuthMode = $Settings.v3AuthMode
-            v3PrivMode = $Settings.v3PrivMode
-            peerIps = $Settings.peerIps
-            hostname = $Settings.hostname
-            port = $Settings.port
+        try {
+            $SNMPProperties = @{
+                v2cEnabled = $Settings.v2cEnabled
+                v3Enabled  = $Settings.v3Enabled
+                v3AuthMode = $Settings.v3AuthMode
+                v3PrivMode = $Settings.v3PrivMode
+                peerIps    = $Settings.peerIps
+                hostname   = $Settings.hostname
+                port       = $Settings.port
+            }
         }
-    }
-    catch {
-        $SNMPProperties = @{
-            v2cEnabled = $Settings.v2cEnabled
-            v3Enabled = $Settings.v3Enabled
-            v3AuthMode = $Settings.v3AuthMode
-            v3PrivMode = $Settings.v3PrivMode
-            peerIps = $Settings.peerIps
-            hostname = $Settings.hostname
-            port = $Settings.port
+        catch {
+            $SNMPProperties = @{
+                v2cEnabled = $Settings.v2cEnabled
+                v3Enabled  = $Settings.v3Enabled
+                v3AuthMode = $Settings.v3AuthMode
+                v3PrivMode = $Settings.v3PrivMode
+                peerIps    = $Settings.peerIps
+                hostname   = $Settings.hostname
+                port       = $Settings.port
+            }
         }
-    }
-    finally {
-        $obj = New-Object -TypeName PSObject -Property $SNMPProperties
-        Write-Output $obj
+        finally {
+            $obj = New-Object -TypeName PSObject -Property $SNMPProperties
+            Write-Output $obj
         }
     }
 }

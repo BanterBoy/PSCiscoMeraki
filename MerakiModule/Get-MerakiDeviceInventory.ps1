@@ -70,15 +70,15 @@
 [CmdletBinding()]
 
 param(
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your API Key.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your API Key.")]
     [Alias('API')]
     [string[]]$ApiKey,
 
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your Organisation ID.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your Organisation ID.")]
     [Alias('OrgID')]
     [string[]]$OrganisationID
 
@@ -86,7 +86,7 @@ param(
 
 BEGIN {}
 
-    PROCESS {
+PROCESS {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
@@ -95,34 +95,34 @@ BEGIN {}
 
     $inventory = Invoke-RestMethod -Method GET -Uri $Uri.inventory -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type' = 'application/json'
+        'Content-Type'           = 'application/json'
     }
 
-    foreach( $item in $inventory ) {
+    foreach ( $item in $inventory ) {
         $Device = $item | Select-Object -Property *
-    try {
-        $DeviceProperties = @{
-            mac = $Device.mac
-            serial = $Device.serial
-            networkId = $Device.networkId
-            model = $Device.model
-            claimedAt = $Device.claimedAt
-            publicIp = $Device.publicIp
+        try {
+            $DeviceProperties = @{
+                mac       = $Device.mac
+                serial    = $Device.serial
+                networkId = $Device.networkId
+                model     = $Device.model
+                claimedAt = $Device.claimedAt
+                publicIp  = $Device.publicIp
+            }
         }
-    }
-    catch {
-        $DeviceProperties = @{
-            mac = $Device.mac
-            serial = $Device.serial
-            networkId = $Device.networkId
-            model = $Device.model
-            claimedAt = $Device.claimedAt
-            publicIp = $Device.publicIp
+        catch {
+            $DeviceProperties = @{
+                mac       = $Device.mac
+                serial    = $Device.serial
+                networkId = $Device.networkId
+                model     = $Device.model
+                claimedAt = $Device.claimedAt
+                publicIp  = $Device.publicIp
+            }
         }
-    }
-    finally {
-        $obj = New-Object -TypeName PSObject -Property $DeviceProperties
-        Write-Output $obj
+        finally {
+            $obj = New-Object -TypeName PSObject -Property $DeviceProperties
+            Write-Output $obj
         }
     }
 }

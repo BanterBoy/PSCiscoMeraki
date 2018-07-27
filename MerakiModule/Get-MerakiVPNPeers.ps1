@@ -54,15 +54,15 @@
 [CmdletBinding()]
 
 param(
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your API Key.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your API Key.")]
     [Alias('API')]
     [string[]]$ApiKey,
 
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your Organisation ID.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your Organisation ID.")]
     [Alias('OrgID')]
     [string[]]$OrganisationID
 
@@ -70,7 +70,7 @@ param(
 
 BEGIN {}
 
-    PROCESS {
+PROCESS {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
@@ -79,30 +79,30 @@ BEGIN {}
 
     $thirdPartyVPNPeers = Invoke-RestMethod -Method GET -Uri $Uri.thirdPartyVPNPeers -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type' = 'application/json'
+        'Content-Type'           = 'application/json'
     }
 
-    foreach( $item in $thirdPartyVPNPeers ) {
+    foreach ( $item in $thirdPartyVPNPeers ) {
         $Settings = $item | Select-Object -Property *
-    try {
-        $thirdPartyVPNPeersProperties = @{
-            name = $Settings.name
-            publicIp = $Settings.publicIp
-            privateSubnets = $Settings.privateSubnets
-            secret = $Settings.secret
+        try {
+            $thirdPartyVPNPeersProperties = @{
+                name           = $Settings.name
+                publicIp       = $Settings.publicIp
+                privateSubnets = $Settings.privateSubnets
+                secret         = $Settings.secret
+            }
         }
-    }
-    catch {
-        $thirdPartyVPNPeersProperties = @{
-            name = $Settings.name
-            publicIp = $Settings.publicIp
-            privateSubnets = $Settings.privateSubnets
-            secret = $Settings.secret
+        catch {
+            $thirdPartyVPNPeersProperties = @{
+                name           = $Settings.name
+                publicIp       = $Settings.publicIp
+                privateSubnets = $Settings.privateSubnets
+                secret         = $Settings.secret
+            }
         }
-    }
-    finally {
-        $obj = New-Object -TypeName PSObject -Property $thirdPartyVPNPeersProperties
-        Write-Output $obj
+        finally {
+            $obj = New-Object -TypeName PSObject -Property $thirdPartyVPNPeersProperties
+            Write-Output $obj
         }
     }
 }

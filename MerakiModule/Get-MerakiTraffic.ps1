@@ -68,28 +68,28 @@
 [CmdletBinding()]
 
 param(
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your API Key.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your API Key.")]
     [Alias('API')]
     [string[]]$ApiKey,
 
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your Network ID.")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your Network ID.")]
     [Alias('NetID')]
     [string[]]$NetworkID,
 
-    [Parameter(Mandatory=$True,
-                ValueFromPipeline=$True,
-                HelpMessage="Enter your TimeSpan (duration in seconds between two hours and one month).")]
+    [Parameter(Mandatory = $True,
+        ValueFromPipeline = $True,
+        HelpMessage = "Enter your TimeSpan (duration in seconds between two hours and one month).")]
     [Alias('TS')]
     [string[]]$TimeSpan
 )
 
 BEGIN {}
 
-    PROCESS {
+PROCESS {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
@@ -98,40 +98,40 @@ BEGIN {}
 
     $traffic = Invoke-RestMethod -Method GET -Uri $Uri.traffic -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type' = 'application/json'
+        'Content-Type'           = 'application/json'
     }
 
-    foreach( $item in $traffic ) {
+    foreach ( $item in $traffic ) {
         $Settings = $item | Select-Object -Property *
-    try {
-        $trafficProperties = @{
-            application = $Settings.application
-            destination = $Settings.destination
-            protocol = $Settings.protocol
-            port = $Settings.port
-            sent = $Settings.sent
-            recv = $Settings.recv
-            numClients = $Settings.numClients
-            activeTime = $Settings.activeTime
-            flows = $Settings.flows
+        try {
+            $trafficProperties = @{
+                application = $Settings.application
+                destination = $Settings.destination
+                protocol    = $Settings.protocol
+                port        = $Settings.port
+                sent        = $Settings.sent
+                recv        = $Settings.recv
+                numClients  = $Settings.numClients
+                activeTime  = $Settings.activeTime
+                flows       = $Settings.flows
+            }
         }
-    }
-    catch {
-        $trafficProperties = @{
-            application = $Settings.application
-            destination = $Settings.destination
-            protocol = $Settings.protocol
-            port = $Settings.port
-            sent = $Settings.sent
-            recv = $Settings.recv
-            numClients = $Settings.numClients
-            activeTime = $Settings.activeTime
-            flows = $Settings.flows
+        catch {
+            $trafficProperties = @{
+                application = $Settings.application
+                destination = $Settings.destination
+                protocol    = $Settings.protocol
+                port        = $Settings.port
+                sent        = $Settings.sent
+                recv        = $Settings.recv
+                numClients  = $Settings.numClients
+                activeTime  = $Settings.activeTime
+                flows       = $Settings.flows
+            }
         }
-    }
-    finally {
-        $obj = New-Object -TypeName PSObject -Property $trafficProperties
-        Write-Output $obj
+        finally {
+            $obj = New-Object -TypeName PSObject -Property $trafficProperties
+            Write-Output $obj
         }
     }
 }
