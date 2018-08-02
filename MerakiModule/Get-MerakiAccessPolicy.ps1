@@ -1,10 +1,10 @@
 <#
     .SYNOPSIS
-    Short function to provide details for an individual network configured on the Meraki Devices.
+    Short function to provide details for an access policy configured on a specific network ID. Only valid for MS networks.
     In order to use this Module you will need an API Key from your Dashboard.
 
     .DESCRIPTION
-    Short function to provide details for an individual network configured on the Meraki Devices.
+    Short function to provide details for an access policy configured on a specific network ID. Only valid for MS networks.
 
     This function queries the Cisco Meraki API service https://dashboard.meraki.com/api/v0 and will be needed for use with additional
     commands within the module.
@@ -19,6 +19,7 @@
 
     .EXAMPLE
     Get-MerakiNetworks -ApiKey APIKeyGoesHere -NetworkID NetIDGoesHere
+    Only valid for MS networks.
 
     .INPUTS
     Accepts Api Key as piped input.
@@ -26,14 +27,24 @@
 
     .OUTPUTS
     The output from the API is sent as JSON and captured in a custom object.
-    {
-        "id": "L_646829496481092083",
-        "organizationId": "549236",
-        "name": "Sandbox 3 - Kampala Uganda",
-        "timeZone": "US/Mountain",
-        "tags": " LearningLab Sandbox ",
-        "type": "combined"
-    }
+    [
+        {
+            "number": 1,
+            "name": "My access policy",
+            "accessType": "8021.x",
+            "guestVlan": 3700,
+            "radiusServers": [
+            {
+                "ip": "1.2.3.4",
+                "port": 1337
+            },
+            {
+                "ip": "2.3.4.5",
+                "port": 1337
+            }
+            ]
+        }
+    ]
 
     You can then select the items that you want to display.
 
@@ -72,40 +83,36 @@ PROCESS {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
-        "networks" = "https://api.meraki.com/api/v0/networks/$NetworkID/accessPolicies"
+        "accessPolicies" = "https://api.meraki.com/api/v0/networks/$NetworkID/accessPolicies"
     }
 
-    $networks = Invoke-RestMethod -Method GET -Uri $Uri.networks -Headers @{
+    $accessPolicies = Invoke-RestMethod -Method GET -Uri $Uri.accessPolicies -Headers @{
         'X-Cisco-Meraki-API-Key' = "$ApiKey"
         'Content-Type'           = 'application/json'
     }
 
-    foreach ( $item in $networks ) {
+    foreach ( $item in $accessPolicies ) {
         $Settings = $item | Select-Object -Property *
         try {
-            $networksProperties = @{
-                disableMyMerakiCom = $Settings.disableMyMerakiCom
-                id                 = $Settings.id
-                name               = $Settings.name
-                organizationId     = $Settings.organizationId
-                tags               = $Settings.tags
-                timeZone           = $Settings.timeZone
-                type               = $Settings.type
+            $accessPoliciesProperties = @{
+                number        = $Settings.number
+                name          = $Settings.name
+                accessType    = $Settings.accessType
+                guestVlan     = $Settings.guestVlan
+                radiusServers = $Settings.radiusServers
             }
         }
         catch {
-            $networksProperties = @{
-                disableMyMerakiCom = $Settings.disableMyMerakiCom
-                id                 = $Settings.id
-                name               = $Settings.name
-                organizationId     = $Settings.organizationId
-                tags               = $Settings.tags
-                timeZone           = $Settings.timeZone
-                type               = $Settings.type
+            $accessPoliciesProperties = @{
+                number        = $Settings.number
+                name          = $Settings.name
+                accessType    = $Settings.accessType
+                guestVlan     = $Settings.guestVlan
+                radiusServers = $Settings.radiusServers
             }
         }
         finally {
-            $obj = New-Object -TypeName PSObject -Property $networksProperties
+            $obj = New-Object -TypeName PSObject -Property $accessPoliciesProperties
             Write-Output $obj
         }
     }
