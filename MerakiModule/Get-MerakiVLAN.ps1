@@ -92,20 +92,26 @@ PROCESS {
         $Settings = $item | Select-Object -Property *
         try {
             $vlansProperties = @{
-                id          = $Settings.id
-                networkId   = $Settings.networkId
-                name        = $Settings.name
-                applianceIp = $Settings.applianceIp
-                subnet      = $Settings.subnet
+                id                 = $Settings.id
+                networkId          = $Settings.networkId
+                name               = $Settings.name
+                applianceIp        = $Settings.applianceIp
+                subnet             = $Settings.subnet
+                fixedIpAssignments = $Settings.fixedIpAssignments
+                reservedIpRanges   = $Settings.reservedIpRanges
+                dnsNameservers     = $Settings.dnsNameservers
             }
         }
         catch {
             $vlansProperties = @{
-                id          = $Settings.id
-                networkId   = $Settings.networkId
-                name        = $Settings.name
-                applianceIp = $Settings.applianceIp
-                subnet      = $Settings.subnet
+                id                 = $Settings.id
+                networkId          = $Settings.networkId
+                name               = $Settings.name
+                applianceIp        = $Settings.applianceIp
+                subnet             = $Settings.subnet
+                fixedIpAssignments = $Settings.fixedIpAssignments
+                reservedIpRanges   = $Settings.reservedIpRanges
+                dnsNameservers     = $Settings.dnsNameservers
             }
         }
         finally {
