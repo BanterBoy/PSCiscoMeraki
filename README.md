@@ -16,6 +16,9 @@ baseUrl
 ## CmdLets
 Currently includes the following Cmdlets
 
+- Get-MerakiAccessPolicy.ps1
+- Get-MerakiAirMarshall.ps1
+- Get-MerakiBluetooth.ps1
 - Get-MerakiDeviceInventory.ps1
 - Get-MerakiDeviceStatus.ps1
 - Get-MerakiLicenceState.ps1
