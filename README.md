@@ -29,7 +29,7 @@ Currently includes the following Cmdlets
 - Get-MerakiSNMP.ps1
 - Get-MerakiTraffic.ps1
 - Get-MerakiVLAN.ps1
-- Get-MerakiVLANList.1.ps1
+- Get-MerakiVLANList.ps1
 - Get-MerakiVPNPeers.ps1
 
 This project is currently "a work in progress" as I am currently working through the options that have been exposed via the API.
