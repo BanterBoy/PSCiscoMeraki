@@ -16,6 +16,7 @@ baseUrl
 ## CmdLets
 Currently includes the following Cmdlets
 
+```powershell
 - Get-MerakiAccessPolicy.ps1
 - Get-MerakiAirMarshall.ps1
 - Get-MerakiBluetooth.ps1
@@ -31,6 +32,7 @@ Currently includes the following Cmdlets
 - Get-MerakiVLAN.ps1
 - Get-MerakiVLANList.ps1
 - Get-MerakiVPNPeers.ps1
+```
 
 This project is currently "a work in progress" as I am currently working through the options that have been exposed via the API.
 
