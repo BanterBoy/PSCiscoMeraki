@@ -35,7 +35,7 @@ Get-MerakiVLANList.ps1
 Get-MerakiVPNPeers.ps1
 ```
 
-This project is currently "a work in progress" as I am currently working through the options that have been exposed via the API.
+This is "a work in progress" as I am working through the options that have been exposed via the API.
 
 ### API documentation
 [http://meraki.io/]
