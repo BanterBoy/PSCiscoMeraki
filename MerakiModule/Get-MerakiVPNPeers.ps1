@@ -1,4 +1,5 @@
-<#
+function Get-MerakiVPNPeers {
+    <#
     .SYNOPSIS
     Short function to provide third Party VPN Peer Details.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -51,60 +52,61 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Organisation ID.")]
-    [Alias('OrgID')]
-    [string[]]$OrganisationID
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Organisation ID.")]
+        [Alias('OrgID')]
+        [string]$OrganisationID
 
-)
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "thirdPartyVPNPeers" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/thirdPartyVPNPeers"
-    }
+        $Uri = @{
+            "thirdPartyVPNPeers" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/thirdPartyVPNPeers"
+        }
 
-    $thirdPartyVPNPeers = Invoke-RestMethod -Method GET -Uri $Uri.thirdPartyVPNPeers -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $thirdPartyVPNPeers = Invoke-RestMethod -Method GET -Uri $Uri.thirdPartyVPNPeers -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $item in $thirdPartyVPNPeers ) {
-        $Settings = $item | Select-Object -Property *
-        try {
-            $thirdPartyVPNPeersProperties = @{
-                name           = $Settings.name
-                publicIp       = $Settings.publicIp
-                privateSubnets = $Settings.privateSubnets
-                secret         = $Settings.secret
+        foreach ( $item in $thirdPartyVPNPeers ) {
+            $Settings = $item | Select-Object -Property *
+            try {
+                $thirdPartyVPNPeersProperties = @{
+                    name           = $Settings.name
+                    publicIp       = $Settings.publicIp
+                    privateSubnets = $Settings.privateSubnets
+                    secret         = $Settings.secret
+                }
+            }
+            catch {
+                $thirdPartyVPNPeersProperties = @{
+                    name           = $Settings.name
+                    publicIp       = $Settings.publicIp
+                    privateSubnets = $Settings.privateSubnets
+                    secret         = $Settings.secret
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $thirdPartyVPNPeersProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $thirdPartyVPNPeersProperties = @{
-                name           = $Settings.name
-                publicIp       = $Settings.publicIp
-                privateSubnets = $Settings.privateSubnets
-                secret         = $Settings.secret
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $thirdPartyVPNPeersProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}

@@ -1,4 +1,5 @@
-<#
+function Get-MerakiDeviceInventory {
+    <#
     .SYNOPSIS
     Short function to provide an inventory of all Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -67,64 +68,65 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Organisation ID.")]
-    [Alias('OrgID')]
-    [string[]]$OrganisationID
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Organisation ID.")]
+        [Alias('OrgID')]
+        [string]$OrganisationID
 
-)
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "inventory" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/inventory"
-    }
+        $Uri = @{
+            "inventory" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/inventory"
+        }
 
-    $inventory = Invoke-RestMethod -Method GET -Uri $Uri.inventory -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $inventory = Invoke-RestMethod -Method GET -Uri $Uri.inventory -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $item in $inventory ) {
-        $Device = $item | Select-Object -Property *
-        try {
-            $DeviceProperties = @{
-                mac       = $Device.mac
-                serial    = $Device.serial
-                networkId = $Device.networkId
-                model     = $Device.model
-                claimedAt = $Device.claimedAt
-                publicIp  = $Device.publicIp
+        foreach ( $item in $inventory ) {
+            $Device = $item | Select-Object -Property *
+            try {
+                $DeviceProperties = @{
+                    mac       = $Device.mac
+                    serial    = $Device.serial
+                    networkId = $Device.networkId
+                    model     = $Device.model
+                    claimedAt = $Device.claimedAt
+                    publicIp  = $Device.publicIp
+                }
+            }
+            catch {
+                $DeviceProperties = @{
+                    mac       = $Device.mac
+                    serial    = $Device.serial
+                    networkId = $Device.networkId
+                    model     = $Device.model
+                    claimedAt = $Device.claimedAt
+                    publicIp  = $Device.publicIp
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $DeviceProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $DeviceProperties = @{
-                mac       = $Device.mac
-                serial    = $Device.serial
-                networkId = $Device.networkId
-                model     = $Device.model
-                claimedAt = $Device.claimedAt
-                publicIp  = $Device.publicIp
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $DeviceProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}

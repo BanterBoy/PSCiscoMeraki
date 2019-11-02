@@ -1,4 +1,5 @@
-<#
+function Get-MerakiBluetooth {
+    <#
     .SYNOPSIS
     Short function to provide details for Bluetooth settings configured on the Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -55,66 +56,67 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Network ID.")]
-    [Alias('NetID')]
-    [string[]]$NetworkID
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Network ID.")]
+        [Alias('NetID')]
+        [string]$NetworkID
 
-)
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "bluetoothSettings" = "https://api.meraki.com/api/v0/networks/$NetworkID/bluetoothSettings"
-    }
+        $Uri = @{
+            "bluetoothSettings" = "https://api.meraki.com/api/v0/networks/$NetworkID/bluetoothSettings"
+        }
 
-    $bluetoothSettings = Invoke-RestMethod -Method GET -Uri $Uri.bluetoothSettings -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $bluetoothSettings = Invoke-RestMethod -Method GET -Uri $Uri.bluetoothSettings -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $item in $bluetoothSettings ) {
-        $Settings = $item | Select-Object -Property *
-        try {
-            $bluetoothSettingsProperties = @{
-                scanningEnabled          = $Settings.scanningEnabled
-                advertisingEnabled       = $Settings.advertisingEnabled
-                uuid                     = $Settings.uuid
-                majorMinorAssignmentMode = $Settings.majorMinorAssignmentMode
-                major                    = $Settings.major
-                minor                    = $Settings.minor
-                type                     = $Settings.type
+        foreach ( $item in $bluetoothSettings ) {
+            $Settings = $item | Select-Object -Property *
+            try {
+                $bluetoothSettingsProperties = @{
+                    scanningEnabled          = $Settings.scanningEnabled
+                    advertisingEnabled       = $Settings.advertisingEnabled
+                    uuid                     = $Settings.uuid
+                    majorMinorAssignmentMode = $Settings.majorMinorAssignmentMode
+                    major                    = $Settings.major
+                    minor                    = $Settings.minor
+                    type                     = $Settings.type
+                }
+            }
+            catch {
+                $bluetoothSettingsProperties = @{
+                    scanningEnabled          = $Settings.scanningEnabled
+                    advertisingEnabled       = $Settings.advertisingEnabled
+                    uuid                     = $Settings.uuid
+                    majorMinorAssignmentMode = $Settings.majorMinorAssignmentMode
+                    major                    = $Settings.major
+                    minor                    = $Settings.minor
+                    type                     = $Settings.type
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $bluetoothSettingsProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $bluetoothSettingsProperties = @{
-                scanningEnabled          = $Settings.scanningEnabled
-                advertisingEnabled       = $Settings.advertisingEnabled
-                uuid                     = $Settings.uuid
-                majorMinorAssignmentMode = $Settings.majorMinorAssignmentMode
-                major                    = $Settings.major
-                minor                    = $Settings.minor
-                type                     = $Settings.type
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $bluetoothSettingsProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}

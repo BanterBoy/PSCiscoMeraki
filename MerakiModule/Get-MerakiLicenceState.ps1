@@ -1,4 +1,5 @@
-<#
+function Get-MerakiLicenceState {
+    <#
     .SYNOPSIS
     Short function to list organizations licences.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -57,61 +58,62 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Organisation ID.")]
-    [Alias('OrgID')]
-    [string[]]$OrganisationID
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Organisation ID.")]
+        [Alias('OrgID')]
+        [string]$OrganisationID
 
-)
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "endPoint"     = 'https://api.meraki.com/api/v0/organizations'
-        "licenseState" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/licenseState"
-    }
+        $Uri = @{
+            "endPoint"     = 'https://api.meraki.com/api/v0/organizations'
+            "licenseState" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/licenseState"
+        }
 
-    $licenseStates = Invoke-RestMethod -Method GET -Uri $Uri.licenseState -Headers @{
-        'OrganisationID'         = "$OrganizationId"
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $licenseStates = Invoke-RestMethod -Method GET -Uri $Uri.licenseState -Headers @{
+            'OrganisationID'         = "$OrganizationId"
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $licenseState in $licenseStates ) {
-        $Lic = $licenseState | Select-Object -Property *
+        foreach ( $licenseState in $licenseStates ) {
+            $Lic = $licenseState | Select-Object -Property *
 
-        try {
-            $LicProperties = @{
-                status               = $Lic.status
-                expirationDate       = $Lic.expirationDate
-                licensedDeviceCounts = $Lic.licensedDeviceCounts
+            try {
+                $LicProperties = @{
+                    status               = $Lic.status
+                    expirationDate       = $Lic.expirationDate
+                    licensedDeviceCounts = $Lic.licensedDeviceCounts
+                }
+            }
+            catch {
+                $LicProperties = @{
+                    status               = $Lic.status
+                    expirationDate       = $Lic.expirationDate
+                    licensedDeviceCounts = $Lic.licensedDeviceCounts
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $LicProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $LicProperties = @{
-                status               = $Lic.status
-                expirationDate       = $Lic.expirationDate
-                licensedDeviceCounts = $Lic.licensedDeviceCounts
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $LicProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}

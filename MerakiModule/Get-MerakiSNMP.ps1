@@ -1,4 +1,5 @@
-<#
+function Get-MerakiSNMP {
+    <#
     .SYNOPSIS
     Short function to provide SNMP Details.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -51,66 +52,67 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Organisation ID.")]
-    [Alias('OrgID')]
-    [string[]]$OrganisationID
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Organisation ID.")]
+        [Alias('OrgID')]
+        [string]$OrganisationID
 
-)
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "snmp" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/snmp"
-    }
+        $Uri = @{
+            "snmp" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/snmp"
+        }
 
-    $SNMP = Invoke-RestMethod -Method GET -Uri $Uri.snmp -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $SNMP = Invoke-RestMethod -Method GET -Uri $Uri.snmp -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $item in $SNMP ) {
-        $Settings = $item | Select-Object -Property *
-        try {
-            $SNMPProperties = @{
-                v2cEnabled = $Settings.v2cEnabled
-                v3Enabled  = $Settings.v3Enabled
-                v3AuthMode = $Settings.v3AuthMode
-                v3PrivMode = $Settings.v3PrivMode
-                peerIps    = $Settings.peerIps
-                hostname   = $Settings.hostname
-                port       = $Settings.port
+        foreach ( $item in $SNMP ) {
+            $Settings = $item | Select-Object -Property *
+            try {
+                $SNMPProperties = @{
+                    v2cEnabled = $Settings.v2cEnabled
+                    v3Enabled  = $Settings.v3Enabled
+                    v3AuthMode = $Settings.v3AuthMode
+                    v3PrivMode = $Settings.v3PrivMode
+                    peerIps    = $Settings.peerIps
+                    hostname   = $Settings.hostname
+                    port       = $Settings.port
+                }
+            }
+            catch {
+                $SNMPProperties = @{
+                    v2cEnabled = $Settings.v2cEnabled
+                    v3Enabled  = $Settings.v3Enabled
+                    v3AuthMode = $Settings.v3AuthMode
+                    v3PrivMode = $Settings.v3PrivMode
+                    peerIps    = $Settings.peerIps
+                    hostname   = $Settings.hostname
+                    port       = $Settings.port
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $SNMPProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $SNMPProperties = @{
-                v2cEnabled = $Settings.v2cEnabled
-                v3Enabled  = $Settings.v3Enabled
-                v3AuthMode = $Settings.v3AuthMode
-                v3PrivMode = $Settings.v3PrivMode
-                peerIps    = $Settings.peerIps
-                hostname   = $Settings.hostname
-                port       = $Settings.port
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $SNMPProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}

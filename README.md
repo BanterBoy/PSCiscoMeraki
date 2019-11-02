@@ -4,17 +4,20 @@ about: Generic details regarding this project.
 ---
 
 # CiscoMeraki
+
 Powershell module to access the Cisco Meraki API to configure your Meraki's
 
 This project is currently on hold as I no longer have access to a Meraki Cloud network and sadly Cisco Dev environment is naff.
 
-### Common Variables
+## Common Variables
+
 * X-Cisco-Meraki-API-Key
 * organizationId
 * networkId
 * baseUrl
 
 ## CmdLets
+
 Currently includes the following Cmdlets
 
 ```powershell
@@ -38,13 +41,16 @@ Get-MerakiVPNPeers.ps1
 This is "a work in progress" as I am working through the options that have been exposed via the API.
 
 ### API documentation
-[http://meraki.io/]
-[https://dashboard.meraki.com/api_docs]
+
+[<http://meraki.io/]>
+[<https://dashboard.meraki.com/api_docs]>
 
 ### API Postman Collection
-[http://postman.meraki.com/]
+
+[<http://postman.meraki.com/]>
 
 ### API Endpoint
-[https://api.meraki.com/api/v0]
+
+[<https://api.meraki.com/api/v0]>
 
 [License](/LICENSE)

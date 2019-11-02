@@ -1,4 +1,5 @@
-<#
+function Get-MerakiNetworkList {
+    <#
     .SYNOPSIS
     Short function to provide a list of networks configured on the Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -67,64 +68,65 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Organisation ID.")]
-    [Alias('OrgID')]
-    [string[]]$OrganisationID
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Organisation ID.")]
+        [Alias('OrgID')]
+        [string]$OrganisationID
 
-)
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "networks" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/networks"
-    }
+        $Uri = @{
+            "networks" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/networks"
+        }
 
-    $networks = Invoke-RestMethod -Method GET -Uri $Uri.networks -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $networks = Invoke-RestMethod -Method GET -Uri $Uri.networks -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $item in $networks ) {
-        $Settings = $item | Select-Object -Property *
-        try {
-            $networksProperties = @{
-                id             = $Settings.id
-                organizationId = $Settings.organizationId
-                name           = $Settings.name
-                timeZone       = $Settings.timeZone
-                tags           = $Settings.tags
-                type           = $Settings.type
+        foreach ( $item in $networks ) {
+            $Settings = $item | Select-Object -Property *
+            try {
+                $networksProperties = @{
+                    id             = $Settings.id
+                    organizationId = $Settings.organizationId
+                    name           = $Settings.name
+                    timeZone       = $Settings.timeZone
+                    tags           = $Settings.tags
+                    type           = $Settings.type
+                }
+            }
+            catch {
+                $networksProperties = @{
+                    id             = $Settings.id
+                    organizationId = $Settings.organizationId
+                    name           = $Settings.name
+                    timeZone       = $Settings.timeZone
+                    tags           = $Settings.tags
+                    type           = $Settings.type
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $networksProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $networksProperties = @{
-                id             = $Settings.id
-                organizationId = $Settings.organizationId
-                name           = $Settings.name
-                timeZone       = $Settings.timeZone
-                tags           = $Settings.tags
-                type           = $Settings.type
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $networksProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}

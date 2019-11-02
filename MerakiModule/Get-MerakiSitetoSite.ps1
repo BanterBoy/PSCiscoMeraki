@@ -1,4 +1,5 @@
-<#
+function Get-MerakiSitetoSite {
+    <#
     .SYNOPSIS
     Short function to provide details for site to site Vpn's configured on the Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -64,58 +65,59 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Network ID.")]
-    [Alias('NetID')]
-    [string[]]$NetworkID
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Network ID.")]
+        [Alias('NetID')]
+        [string]$NetworkID
 
-)
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "siteToSiteVpn" = "https://api.meraki.com/api/v0/networks/$NetworkID/siteToSiteVpn"
-    }
+        $Uri = @{
+            "siteToSiteVpn" = "https://api.meraki.com/api/v0/networks/$NetworkID/siteToSiteVpn"
+        }
 
-    $siteToSiteVpn = Invoke-RestMethod -Method GET -Uri $Uri.siteToSiteVpn -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $siteToSiteVpn = Invoke-RestMethod -Method GET -Uri $Uri.siteToSiteVpn -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $item in $siteToSiteVpn ) {
-        $Settings = $item | Select-Object -Property *
-        try {
-            $siteToSiteVpnProperties = @{
-                mode    = $Settings.mode
-                hubs    = $Settings.hubs
-                subnets = $Settings.subnets
+        foreach ( $item in $siteToSiteVpn ) {
+            $Settings = $item | Select-Object -Property *
+            try {
+                $siteToSiteVpnProperties = @{
+                    mode    = $Settings.mode
+                    hubs    = $Settings.hubs
+                    subnets = $Settings.subnets
+                }
+            }
+            catch {
+                $siteToSiteVpnProperties = @{
+                    mode    = $Settings.mode
+                    hubs    = $Settings.hubs
+                    subnets = $Settings.subnets
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $siteToSiteVpnProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $siteToSiteVpnProperties = @{
-                mode    = $Settings.mode
-                hubs    = $Settings.hubs
-                subnets = $Settings.subnets
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $siteToSiteVpnProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}

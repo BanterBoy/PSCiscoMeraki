@@ -1,4 +1,5 @@
-<#
+function Get-MerakiAirMarshall {
+  <#
     .SYNOPSIS
     Short function to provide details for an access policy configured on a specific network ID.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -72,77 +73,75 @@
 
 #>
 
-[CmdletBinding()]
+  [CmdletBinding()]
 
-param(
+  param(
     [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
+      ValueFromPipeline = $True,
+      HelpMessage = "Enter your API Key.")]
     [Alias('API')]
-    [string[]]$ApiKey,
+    [string]$ApiKey,
 
     [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Network ID.")]
+      ValueFromPipeline = $True,
+      HelpMessage = "Enter your Network ID.")]
     [Alias('NetID')]
-    [string[]]$NetworkID,
+    [string]$NetworkID,
 
     [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your time span in seconds (e.g. 3600). Must be a maximum of one month in seconds.")]
+      ValueFromPipeline = $True,
+      HelpMessage = "Enter your time span in seconds (e.g. 3600). Must be a maximum of one month in seconds.")]
     [Alias('TS')]
-    [string[]]$TimeSpan
+    [string]$TimeSpan
 
-)
+  )
 
-BEGIN {}
+  BEGIN { }
 
-PROCESS {
+  PROCESS {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     $Uri = @{
-        "timespan" = "https://api.meraki.com/api/v0/networks/$NetworkID/airMarshal?timespan=$TimeSpan"
+      "timespan" = "https://api.meraki.com/api/v0/networks/$NetworkID/airMarshal?timespan=$TimeSpan"
     }
 
     $timespaned = Invoke-RestMethod -Method GET -Uri $Uri.timespan -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
+      'X-Cisco-Meraki-API-Key' = "$ApiKey"
+      'Content-Type'           = 'application/json'
     }
 
     foreach ( $item in $timespaned ) {
-        $Settings = $item | Select-Object -Property *
-        try {
-            $timespanProperties = @{
-                ssid          = $Settings.ssid
-                bssids        = $Settings.bssids
-                channels      = $Settings.channels
-                firstSeen     = $Settings.firstSeen
-                lastSeen      = $Settings.lastSeen
-                wiredMacs     = $Settings.wiredMacs
-                wiredVlans    = $Settings.wiredVlans
-                wiredLastSeen = $Settings.wiredLastSeen
-            }
+      $Settings = $item | Select-Object -Property *
+      try {
+        $timespanProperties = @{
+          ssid          = $Settings.ssid
+          bssids        = $Settings.bssids
+          channels      = $Settings.channels
+          firstSeen     = $Settings.firstSeen
+          lastSeen      = $Settings.lastSeen
+          wiredMacs     = $Settings.wiredMacs
+          wiredVlans    = $Settings.wiredVlans
+          wiredLastSeen = $Settings.wiredLastSeen
         }
-        catch {
-            $timespanProperties = @{
-                ssid          = $Settings.ssid
-                bssids        = $Settings.bssids
-                channels      = $Settings.channels
-                firstSeen     = $Settings.firstSeen
-                lastSeen      = $Settings.lastSeen
-                wiredMacs     = $Settings.wiredMacs
-                wiredVlans    = $Settings.wiredVlans
-                wiredLastSeen = $Settings.wiredLastSeen
-            }
+      }
+      catch {
+        $timespanProperties = @{
+          ssid          = $Settings.ssid
+          bssids        = $Settings.bssids
+          channels      = $Settings.channels
+          firstSeen     = $Settings.firstSeen
+          lastSeen      = $Settings.lastSeen
+          wiredMacs     = $Settings.wiredMacs
+          wiredVlans    = $Settings.wiredVlans
+          wiredLastSeen = $Settings.wiredLastSeen
         }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $timespanProperties
-            Write-Output $obj
-        }
+      }
+      finally {
+        $obj = New-Object -TypeName PSObject -Property $timespanProperties
+        Write-Output $obj
+      }
     }
+  }
+
+  END { }
 }
-
-END {}
-
-
-

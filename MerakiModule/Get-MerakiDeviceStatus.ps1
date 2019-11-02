@@ -1,4 +1,5 @@
-<#
+function Get-MerakiDeviceStatus {
+    <#
     .SYNOPSIS
     Short function to list Device Status.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -63,66 +64,67 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Organisation ID.")]
-    [Alias('OrgID')]
-    [string[]]$OrganisationID
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Organisation ID.")]
+        [Alias('OrgID')]
+        [string]$OrganisationID
 
-)
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "deviceStatuses" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/deviceStatuses"
-    }
+        $Uri = @{
+            "deviceStatuses" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/deviceStatuses"
+        }
 
-    $deviceStatuses = Invoke-RestMethod -Method GET -Uri $Uri.deviceStatuses -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $deviceStatuses = Invoke-RestMethod -Method GET -Uri $Uri.deviceStatuses -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $device in $deviceStatuses ) {
-        $item = $device | Select-Object -Property *
-        try {
-            $DeviceProperties = @{
-                lanIp     = $item.lanIp
-                mac       = $item.mac
-                name      = $item.name
-                networkId = $item.networkId
-                publicIp  = $item.publicIp
-                serial    = $item.serial
-                status    = $item.status
+        foreach ( $device in $deviceStatuses ) {
+            $item = $device | Select-Object -Property *
+            try {
+                $DeviceProperties = @{
+                    lanIp     = $item.lanIp
+                    mac       = $item.mac
+                    name      = $item.name
+                    networkId = $item.networkId
+                    publicIp  = $item.publicIp
+                    serial    = $item.serial
+                    status    = $item.status
+                }
+            }
+            catch {
+                $DeviceProperties = @{
+                    lanIp     = $item.lanIp
+                    mac       = $item.mac
+                    name      = $item.name
+                    networkId = $item.networkId
+                    publicIp  = $item.publicIp
+                    serial    = $item.serial
+                    status    = $item.status
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $DeviceProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $DeviceProperties = @{
-                lanIp     = $item.lanIp
-                mac       = $item.mac
-                name      = $item.name
-                networkId = $item.networkId
-                publicIp  = $item.publicIp
-                serial    = $item.serial
-                status    = $item.status
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $DeviceProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}

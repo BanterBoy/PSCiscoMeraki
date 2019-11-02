@@ -1,4 +1,5 @@
-<#
+function Get-MerakiAdminList {
+    <#
     .SYNOPSIS
     Short function to list organizations admin users which will be needed to use with other commands within this module.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -94,64 +95,65 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $false,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Organisation ID.")]
-    [Alias('OrgID')]
-    [string[]]$OrganisationID
-)
+        [Parameter(Mandatory = $false,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Organisation ID.")]
+        [Alias('OrgID')]
+        [string]$OrganisationID
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "admins" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/admins"
-    }
+        $Uri = @{
+            "admins" = "https://api.meraki.com/api/v0/organizations/$OrganisationID/admins"
+        }
 
-    $admins = Invoke-RestMethod -Method GET -Uri $Uri.admins -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $admins = Invoke-RestMethod -Method GET -Uri $Uri.admins -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $item in $admins ) {
-        $Settings = $item | Select-Object -Property *
+        foreach ( $item in $admins ) {
+            $Settings = $item | Select-Object -Property *
 
-        try {
-            $adminProperties = @{
-                name      = $Settings.name
-                email     = $Settings.email
-                id        = $Settings.id
-                networks  = $Settings.networks
-                tags      = $Settings.tags
-                orgAccess = $Settings.orgAccess
+            try {
+                $adminProperties = @{
+                    name      = $Settings.name
+                    email     = $Settings.email
+                    id        = $Settings.id
+                    networks  = $Settings.networks
+                    tags      = $Settings.tags
+                    orgAccess = $Settings.orgAccess
+                }
+            }
+            catch {
+                $adminProperties = @{
+                    name      = $Settings.name
+                    email     = $Settings.email
+                    id        = $Settings.id
+                    networks  = $Settings.networks
+                    tags      = $Settings.tags
+                    orgAccess = $Settings.orgAccess
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $adminProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $adminProperties = @{
-                name      = $Settings.name
-                email     = $Settings.email
-                id        = $Settings.id
-                networks  = $Settings.networks
-                tags      = $Settings.tags
-                orgAccess = $Settings.orgAccess
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $adminProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}

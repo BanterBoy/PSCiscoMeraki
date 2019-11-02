@@ -1,4 +1,5 @@
-<#
+function Get-MerakiTraffic {
+    <#
     .SYNOPSIS
     Short function to provide details for site to site Vpn's configured on the Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -65,75 +66,76 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Network ID.")]
-    [Alias('NetID')]
-    [string[]]$NetworkID,
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Network ID.")]
+        [Alias('NetID')]
+        [string]$NetworkID,
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your TimeSpan (duration in seconds between two hours and one month).")]
-    [Alias('TS')]
-    [string[]]$TimeSpan
-)
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your TimeSpan (duration in seconds between two hours and one month).")]
+        [Alias('TS')]
+        [string]$TimeSpan
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "traffic" = "https://api.meraki.com/api/v0/networks/$NetworkID/traffic?timespan=$TimeSpan"
-    }
+        $Uri = @{
+            "traffic" = "https://api.meraki.com/api/v0/networks/$NetworkID/traffic?timespan=$TimeSpan"
+        }
 
-    $traffic = Invoke-RestMethod -Method GET -Uri $Uri.traffic -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $traffic = Invoke-RestMethod -Method GET -Uri $Uri.traffic -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $item in $traffic ) {
-        $Settings = $item | Select-Object -Property *
-        try {
-            $trafficProperties = @{
-                application = $Settings.application
-                destination = $Settings.destination
-                protocol    = $Settings.protocol
-                port        = $Settings.port
-                sent        = $Settings.sent
-                recv        = $Settings.recv
-                numClients  = $Settings.numClients
-                activeTime  = $Settings.activeTime
-                flows       = $Settings.flows
+        foreach ( $item in $traffic ) {
+            $Settings = $item | Select-Object -Property *
+            try {
+                $trafficProperties = @{
+                    application = $Settings.application
+                    destination = $Settings.destination
+                    protocol    = $Settings.protocol
+                    port        = $Settings.port
+                    sent        = $Settings.sent
+                    recv        = $Settings.recv
+                    numClients  = $Settings.numClients
+                    activeTime  = $Settings.activeTime
+                    flows       = $Settings.flows
+                }
+            }
+            catch {
+                $trafficProperties = @{
+                    application = $Settings.application
+                    destination = $Settings.destination
+                    protocol    = $Settings.protocol
+                    port        = $Settings.port
+                    sent        = $Settings.sent
+                    recv        = $Settings.recv
+                    numClients  = $Settings.numClients
+                    activeTime  = $Settings.activeTime
+                    flows       = $Settings.flows
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $trafficProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $trafficProperties = @{
-                application = $Settings.application
-                destination = $Settings.destination
-                protocol    = $Settings.protocol
-                port        = $Settings.port
-                sent        = $Settings.sent
-                recv        = $Settings.recv
-                numClients  = $Settings.numClients
-                activeTime  = $Settings.activeTime
-                flows       = $Settings.flows
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $trafficProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}

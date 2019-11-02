@@ -1,4 +1,5 @@
-<#
+function Get-MerakiAccessPolicy {
+    <#
     .SYNOPSIS
     Short function to provide details for an access policy configured on a specific network ID. Only valid for MS networks.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -60,62 +61,63 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
+    
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Network ID.")]
+        [Alias('NetID')]
+        [string]$NetworkID
+    )
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Network ID.")]
-    [Alias('NetID')]
-    [string[]]$NetworkID
+    BEGIN { }
 
-)
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-BEGIN {}
+        $Uri = @{
+            "accessPolicies" = "https://api.meraki.com/api/v0/networks/$NetworkID/accessPolicies"
+        }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $accessPolicies = Invoke-RestMethod -Method GET -Uri $Uri.accessPolicies -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    $Uri = @{
-        "accessPolicies" = "https://api.meraki.com/api/v0/networks/$NetworkID/accessPolicies"
-    }
-
-    $accessPolicies = Invoke-RestMethod -Method GET -Uri $Uri.accessPolicies -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
-
-    foreach ( $item in $accessPolicies ) {
-        $Settings = $item | Select-Object -Property *
-        try {
-            $accessPoliciesProperties = @{
-                number        = $Settings.number
-                name          = $Settings.name
-                accessType    = $Settings.accessType
-                guestVlan     = $Settings.guestVlan
-                radiusServers = $Settings.radiusServers
+        foreach ( $item in $accessPolicies ) {
+            $Settings = $item | Select-Object -Property *
+            try {
+                $accessPoliciesProperties = @{
+                    number        = $Settings.number
+                    name          = $Settings.name
+                    accessType    = $Settings.accessType
+                    guestVlan     = $Settings.guestVlan
+                    radiusServers = $Settings.radiusServers
+                }
+            }
+            catch {
+                $accessPoliciesProperties = @{
+                    number        = $Settings.number
+                    name          = $Settings.name
+                    accessType    = $Settings.accessType
+                    guestVlan     = $Settings.guestVlan
+                    radiusServers = $Settings.radiusServers
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $accessPoliciesProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $accessPoliciesProperties = @{
-                number        = $Settings.number
-                name          = $Settings.name
-                accessType    = $Settings.accessType
-                guestVlan     = $Settings.guestVlan
-                radiusServers = $Settings.radiusServers
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $accessPoliciesProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
+
 }
-
-END {}

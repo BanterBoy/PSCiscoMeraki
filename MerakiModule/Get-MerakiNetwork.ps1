@@ -1,4 +1,5 @@
-<#
+function Get-MerakiNetwork {
+    <#
     .SYNOPSIS
     Short function to provide details for an individual network configured on the Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -49,66 +50,67 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Network ID.")]
-    [Alias('NetID')]
-    [string[]]$NetworkID
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Network ID.")]
+        [Alias('NetID')]
+        [string]$NetworkID
 
-)
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "networks" = "https://api.meraki.com/api/v0/networks/$NetworkID"
-    }
+        $Uri = @{
+            "networks" = "https://api.meraki.com/api/v0/networks/$NetworkID"
+        }
 
-    $networks = Invoke-RestMethod -Method GET -Uri $Uri.networks -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $networks = Invoke-RestMethod -Method GET -Uri $Uri.networks -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $item in $networks ) {
-        $Settings = $item | Select-Object -Property *
-        try {
-            $networksProperties = @{
-                disableMyMerakiCom = $Settings.disableMyMerakiCom
-                id                 = $Settings.id
-                name               = $Settings.name
-                organizationId     = $Settings.organizationId
-                tags               = $Settings.tags
-                timeZone           = $Settings.timeZone
-                type               = $Settings.type
+        foreach ( $item in $networks ) {
+            $Settings = $item | Select-Object -Property *
+            try {
+                $networksProperties = @{
+                    disableMyMerakiCom = $Settings.disableMyMerakiCom
+                    id                 = $Settings.id
+                    name               = $Settings.name
+                    organizationId     = $Settings.organizationId
+                    tags               = $Settings.tags
+                    timeZone           = $Settings.timeZone
+                    type               = $Settings.type
+                }
+            }
+            catch {
+                $networksProperties = @{
+                    disableMyMerakiCom = $Settings.disableMyMerakiCom
+                    id                 = $Settings.id
+                    name               = $Settings.name
+                    organizationId     = $Settings.organizationId
+                    tags               = $Settings.tags
+                    timeZone           = $Settings.timeZone
+                    type               = $Settings.type
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $networksProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $networksProperties = @{
-                disableMyMerakiCom = $Settings.disableMyMerakiCom
-                id                 = $Settings.id
-                name               = $Settings.name
-                organizationId     = $Settings.organizationId
-                tags               = $Settings.tags
-                timeZone           = $Settings.timeZone
-                type               = $Settings.type
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $networksProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}

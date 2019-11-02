@@ -1,4 +1,5 @@
-﻿<#
+﻿function Get-MerakiOrganisation {
+    <#
     .SYNOPSIS
     Short function to list organizations the user has access to which will be needed to use with other commands within this module.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -72,60 +73,61 @@
 
 #>
 
-[CmdletBinding()]
+    [CmdletBinding()]
 
-param(
-    [Parameter(Mandatory = $True,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your API Key.")]
-    [Alias('API')]
-    [string[]]$ApiKey,
+    param(
+        [Parameter(Mandatory = $True,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your API Key.")]
+        [Alias('API')]
+        [string]$ApiKey,
 
-    [Parameter(Mandatory = $false,
-        ValueFromPipeline = $True,
-        HelpMessage = "Enter your Organisation ID.")]
-    [Alias('OrgID')]
-    [string[]]$OrganisationID
-)
+        [Parameter(Mandatory = $false,
+            ValueFromPipeline = $True,
+            HelpMessage = "Enter your Organisation ID.")]
+        [Alias('OrgID')]
+        [string]$OrganisationID
+    )
 
-BEGIN {}
+    BEGIN { }
 
-PROCESS {
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    PROCESS {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $Uri = @{
-        "organisation" = 'https://api.meraki.com/api/v0/organizations'
-    }
+        $Uri = @{
+            "organisation" = 'https://api.meraki.com/api/v0/organizations'
+        }
 
-    $Organisations = Invoke-RestMethod -Method GET -Uri $Uri.organisation -Headers @{
-        'X-Cisco-Meraki-API-Key' = "$ApiKey"
-        'Content-Type'           = 'application/json'
-    }
+        $Organisations = Invoke-RestMethod -Method GET -Uri $Uri.organisation -Headers @{
+            'X-Cisco-Meraki-API-Key' = "$ApiKey"
+            'Content-Type'           = 'application/json'
+        }
 
-    foreach ( $Organisation in $Organisations ) {
-        $Org = $Organisation | Select-Object -Property *
+        foreach ( $Organisation in $Organisations ) {
+            $Org = $Organisation | Select-Object -Property *
 
-        try {
-            $OrgProperties = @{
-                ID       = $Org.id
-                Name     = $Org.name
-                SAMLUrl  = $Org.samlConsumerUrl
-                SAMLUrls = $Org.samlConsumerUrls
+            try {
+                $OrgProperties = @{
+                    ID       = $Org.id
+                    Name     = $Org.name
+                    SAMLUrl  = $Org.samlConsumerUrl
+                    SAMLUrls = $Org.samlConsumerUrls
+                }
+            }
+            catch {
+                $OrgProperties = @{
+                    ID       = $Org.id
+                    Name     = $Org.name
+                    SAMLUrl  = $Org.samlConsumerUrl
+                    SAMLUrls = $Org.samlConsumerUrls
+                }
+            }
+            finally {
+                $obj = New-Object -TypeName PSObject -Property $OrgProperties
+                Write-Output $obj
             }
         }
-        catch {
-            $OrgProperties = @{
-                ID       = $Org.id
-                Name     = $Org.name
-                SAMLUrl  = $Org.samlConsumerUrl
-                SAMLUrls = $Org.samlConsumerUrls
-            }
-        }
-        finally {
-            $obj = New-Object -TypeName PSObject -Property $OrgProperties
-            Write-Output $obj
-        }
     }
+
+    END { }
 }
-
-END {}
