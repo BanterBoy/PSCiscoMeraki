@@ -1,9 +1,8 @@
----
-name: README.md
-about: Generic details regarding this project.
----
-
 # CiscoMeraki
+
+|name:| README.md |
+|-----|--|
+|  about:   | Generic details regarding this project. |
 
 Powershell module to access the Cisco Meraki API to configure your Meraki's
 
@@ -42,8 +41,8 @@ This is "a work in progress" as I am working through the options that have been 
 
 ### API documentation
 
-[<http://meraki.io/]>
-[<https://dashboard.meraki.com/api_docs]>
+[<http://meraki.io/]>>
+[<https://dashboard.meraki.com/api_docs]>>
 
 ### API Postman Collection
 
