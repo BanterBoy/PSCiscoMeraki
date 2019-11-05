@@ -63,6 +63,6 @@ Get-MerakiVLANList
 Get-MerakiVPNPeers
 ```
 
-This is "a work in progress" as I am working through the options that have been exposed via the API.
+This is "a work in progress" as I am working through the options that have been exposed via the API. Apologies for the state of the help, this module is not yet finished.
 
 [License](/LICENSE)

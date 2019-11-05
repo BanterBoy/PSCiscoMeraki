@@ -1,13 +1,11 @@
-# Get-MerakiNetworks
-
 ## SYNOPSIS
 
-Short function to provide details for an access policy configured on a specific network ID. Only valid for MS networks.
+Short function to list organizations admin users which will be needed to use with other commands within this module.
 In order to use this Module you will need an API Key from your Dashboard.
 
 ## DESCRIPTION
 
-Short function to provide details for an access policy configured on a specific network ID. Only valid for MS networks.
+Short function to output your Meraki Organisation ID which you will need in order to use with other commands within this module.
 
 This function queries the Cisco Meraki API service <https://dashboard.meraki.com/api/v0> and will be needed for use with additional
 commands within the module.
@@ -27,45 +25,54 @@ After enabling the API, go to the **my profile** page to generate an API key. Th
 
 ****Note*** that SAML dashboard administrators cannot view or generate API keys.*
 
-## EXAMPLE
+### EXAMPLE 1
 
-    Get-MerakiNetworks -ApiKey APIKeyGoesHere -NetworkID NetIDGoesHere
-    Only valid for MS networks.
+    Export your companies ID, Name and SAML Url's
+    Get-MerakiAdminList -ApiKey "YourApiKeyGoesHere"
+
 
 ## INPUTS
 
 Accepts Api Key as piped input.
 Accepts Organisation ID as piped input.
 
-    .OUTPUTS
-    The output from the API is sent as JSON and captured in a custom object.
+## OUTPUTS
+
+The output from the API is sent as JSON and captured in a custom object.
     [
         {
-            "number": 1,
-            "name": "My access policy",
-            "accessType": "8021.x",
-            "guestVlan": 3700,
-            "radiusServers": [
-            {
-                "ip": "1.2.3.4",
-                "port": 1337
-            },
-            {
-                "ip": "2.3.4.5",
-                "port": 1337
-            }
-            ]
+            "name": "Miles Meraki",
+            "email": "miles+test@meraki.com",
+            "id": "646829496481123357",
+            "networks": [],
+            "tags": [
+                {
+                    "tag": "Sandbox",
+                    "access": "full"
+                }
+            ],
+            "orgAccess": "read-only"
+        },
+        {
+            "name": "adminstrator123",
+            "email": "administrator123@ikarem.com",
+            "id": "646829496481136255",
+            "networks": [],
+            "tags": [],
+            "orgAccess": "read-only"
         }
     ]
 
 You can then select the items that you want to display.
 
-    .NOTES
+## NOTES
+
     Author:     Luke Leigh
     Website:    https://blog.lukeleigh.com/
     LinkedIn:   https://www.linkedin.com/in/lukeleigh/
     GitHub:     https://github.com/BanterBoy/
     GitHubGist: https://gist.github.com/BanterBoy
 
-    .LINK
+## LINK
+
     https://github.com/BanterBoy/CiscoMeraki/wiki
