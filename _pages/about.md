@@ -8,8 +8,9 @@ comments: true
 share: true
 related: true
 categories:
-  - about
-  - module
+  - Module
+  - About
+  - PowerShell
 tags:
   - PSCiscoMeraki
   - Installation
