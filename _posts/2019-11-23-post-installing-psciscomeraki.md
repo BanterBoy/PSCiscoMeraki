@@ -2,7 +2,6 @@
 title: "Post: Installing the PSCiscoMeraki PowerShell Module"
 date: 2019-11-23T05:07:30
 layout: posts
-author_profile: true
 read_time: true
 comments: true
 share: true

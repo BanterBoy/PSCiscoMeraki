@@ -10,6 +10,7 @@ twitter_username: luke_leighs
 github_username: BanterBoy
 minimal_mistakes_skin: dark
 search: true
+read_time: true
 
 # Build settings
 markdown: kramdown
