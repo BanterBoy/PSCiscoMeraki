@@ -8,8 +8,13 @@ comments: true
 share: true
 related: true
 categories:
-  - blog
+  - Blog
+  - PSCiscoMeraki
+  - Installation
+  - PowerShell
+  - Module
 tags:
+  - Blog
   - PSCiscoMeraki
   - Installation
   - PowerShell
