@@ -1,8 +1,9 @@
 pull_request_rules:
-  - name: Automatic merge
-  conditions:
-    - base=master
-    - "#approved-reviews-by>=1"
+  - name: automatic merge when passes and  review
+    conditions:
+      - "#approved-reviews-by>=1"
+      - author=BanterBoy
+      - base=master
     actions:
       merge:
         method: merge
