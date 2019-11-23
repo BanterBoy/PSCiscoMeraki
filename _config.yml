@@ -10,7 +10,8 @@ twitter_username: luke_leighs
 github_username: BanterBoy
 minimal_mistakes_skin: dark
 search: true
-
+breadcrumbs: "true" # true, false (default)
+words_per_minute: "65"
 # Build settings
 markdown: kramdown
 remote_theme: mmistakes/minimal-mistakes@4.17.2
