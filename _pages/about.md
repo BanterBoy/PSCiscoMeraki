@@ -19,7 +19,7 @@ tags:
   - About
 ---
 
-# PSCiscoMeraki
+## PSCiscoMeraki
 
 This Powershell module can be used to access the Cisco Meraki Rest API and request information related to the configuration. The ultimate goal is to create the final components that will enable you to configure your Meraki Network.
 
@@ -27,7 +27,7 @@ At present this project is on hold, due to time constraints with my present job.
 
 The module can currently be used to extract your current configuration but will require you to have an API key.
 
-## Overview of Cisco Meraki API
+### Overview of Cisco Meraki API
 
 The Meraki Dashboard API is an interface for software to interact directly with the Meraki cloud platform and Meraki managed devices. The API contains a set of tools known as endpoints for building software and applications that communicate with the Meraki Dashboard for use cases such as provisioning, bulk configuration changes, monitoring, and role-based access controls. The Dashboard API is a modern, RESTful API using HTTPS requests to a URL and JSON as a human-readable format. The Dashboard API is an open-ended tool can be used for many purposes, and here are some examples of how it is used today by Meraki customers:
 
@@ -36,7 +36,7 @@ The Meraki Dashboard API is an interface for software to interact directly with 
 * Automatically onboard and off-board new employees' teleworker device
 * Build your own dashboard for store managers, field techs, or unique use cases
 
-## Enable API access
+### Enable API access
 
 For access to the API, first enable the API for your organization under Organization > Settings > Dashboard API access.
 
@@ -50,7 +50,7 @@ After enabling the API, go to the **my profile** page to generate an API key. Th
 
 ****Note*** that SAML dashboard administrators cannot view or generate API keys.*
 
-## Module Installation Instructions
+### Module Installation Instructions
 
 The module has been made available for installation from the PowerShell Gallery and can be installed by Copying and Pasting the following commands :-
 
