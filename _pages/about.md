@@ -1,6 +1,11 @@
 ---
 permalink: /about/
 title: "About"
+date: 2019-11-23T01:41:30-04:00
+categories:
+  - about
+tags:
+  - about, psciscomeraki, module, powershell
 ---
 
 # PSCiscoMeraki
