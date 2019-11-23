@@ -1,5 +1,7 @@
 ---
 title: "Post: Standard"
+date: 2014-03-09T16:20:02
+last_modified_at: 2014-03-09T16:20:02
 read_time: true
 excerpt_separator: "<!--more-->"
 categories:

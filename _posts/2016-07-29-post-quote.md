@@ -1,5 +1,8 @@
 ---
 title: "Post: Quote"
+date: 2016-07-29T16:20:02
+last_modified_at: 2016-07-29T16:20:02
+read_time: true
 categories:
   - Blog
 tags:

@@ -1,6 +1,7 @@
 ---
 title: "Post: Quote"
-date: 2019-11-23T01:41:30-04:00
+date: 2019-11-23T01:41:30
+last_modified_at: 2019-11-23T01:41:30
 read_time: true
 categories:
   - blog

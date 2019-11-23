@@ -1,5 +1,7 @@
 ---
 title: "Post: Notice"
+date: 2012-03-09T16:20:02
+last_modified_at: 2012-03-09T16:20:02
 read_time: true
 categories:
   - Blog
