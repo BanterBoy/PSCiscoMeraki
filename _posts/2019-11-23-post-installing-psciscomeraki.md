@@ -18,9 +18,13 @@ tags:
 
 ## Installing PSCiscoMeraki
 
+The link below will take you to the module listing in the PowerShell Gallery.
+
 [PSCiscoMeraki](https://www.powershellgallery.com/packages/PSCiscoMeraki/1.0.0)
 
 Make sure you are running Powershell 5.0 (WMF 5.0).
+
+You can install the module by entering the following commands into an Elevated PowerShell session. Please open PowerShell as an Administrator and either paste or type the commands below.
 
     # Install PSCiscoMeraki from the Powershell Gallery
     Find-Module PSCiscoMeraki | Install-Module
