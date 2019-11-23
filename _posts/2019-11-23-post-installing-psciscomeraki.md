@@ -20,8 +20,6 @@ tags:
   - Module
 ---
 
-## Installing PSCiscoMeraki
-
 ## Module Installation Instructions
 
 The module has been made available for installation from the PowerShell Gallery and can be installed by Copying and Pasting the following commands :-
