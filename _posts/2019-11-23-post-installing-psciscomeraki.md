@@ -22,16 +22,42 @@ tags:
 
 ## Installing PSCiscoMeraki
 
+## Module Installation Instructions
+
+The module has been made available for installation from the PowerShell Gallery and can be installed by Copying and Pasting the following commands :-
+
+```powershell
+Install-Module -Name PSCiscoMeraki
+
+Import-Module -Name PSCiscoMeraki
+```
+
+Currently includes the following Cmdlets
+
+```powershell
+Get-MerakiAccessPolicy
+Get-MerakiAirMarshall
+Get-MerakiBluetooth
+Get-MerakiDeviceInventory
+Get-MerakiDeviceStatus
+Get-MerakiLicenceState
+Get-MerakiNetwork
+Get-MerakiNetworkList
+Get-MerakiOrganisation
+Get-MerakiSitetoSite
+Get-MerakiSNMP
+Get-MerakiTraffic
+Get-MerakiVLAN
+Get-MerakiVLANList
+Get-MerakiVPNPeers
+```
+
+This is "a work in progress" as I am working through the options that have been exposed via the API. Apologies for the state of the help, this module is not yet finished.
+
 The link below will take you to the module listing in the PowerShell Gallery.
 
 [PSCiscoMeraki](https://www.powershellgallery.com/packages/PSCiscoMeraki/1.0.0)
 
 Make sure you are running Powershell 5.0 (WMF 5.0).
 
-You can install the module by entering the following commands into an Elevated PowerShell session. Please open PowerShell as an Administrator and either paste or type the commands below.
-
-    # Install PSCiscoMeraki from the Powershell Gallery
-    Find-Module PSCiscoMeraki | Install-Module
-
-    # Import Module
-    Import-Module PSCiscoMeraki
+You can install the module by entering the following commands into an Elevated PowerShell session. Please open PowerShell as an Administrator and either paste or type the
