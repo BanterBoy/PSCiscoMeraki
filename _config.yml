@@ -79,6 +79,9 @@ author:
     - label: "keybase"
       icon: "fab fa-fw fa-keybase"
       url: "https://keybase.io/lukeleigh"
+    - label: "Uptime Robot"
+      icon: "fas fa-robot"
+      url: "https://uptimerobot.lukeleigh.com"
 
 footer:
   links:
