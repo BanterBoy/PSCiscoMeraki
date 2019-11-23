@@ -10,10 +10,6 @@ tags:
 
 # PSCiscoMeraki
 
-|name:| README.md |
-|-----|--|
-|  about:   | Generic details regarding this project. |
-
 This Powershell module can be used to access the Cisco Meraki Rest API and request information related to the configuration. The ultimate goal is to create the final components that will enable you to configure your Meraki Network.
 
 At present this project is on hold, due to time constraints with my present job....I simply do not have time in between work projects. I will however pick this up again when I have more free time. I have started using the Cisco Dev environment but there has been no further progress.
