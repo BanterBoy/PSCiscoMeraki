@@ -2,14 +2,20 @@
 permalink: /about/
 title: "About"
 date: 2019-11-23T01:41:30-04:00
+author_profile: true
+read_time: true
+comments: true
+share: true
+related: true
 categories:
   - about
   - module
 tags:
-  - about
-  - psciscomeraki
-  - module
-  - powershell
+  - PSCiscoMeraki
+  - Installation
+  - PowerShell
+  - Module
+  - About
 ---
 
 # PSCiscoMeraki
