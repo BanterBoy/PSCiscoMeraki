@@ -63,7 +63,7 @@ author:
       icon: "fas fa-fw fa-envelope-square"
     - label: "Profile"
       icon: "fas fa-fw fa-link"
-      link: "https://velocv.com/lukeleigh"
+      url: "https://velocv.com/lukeleigh"
     - label: "adminTookit"
       icon: "fas fa-hashtag"
       url: "https://admintoolkit.lukeleigh.com"
@@ -72,13 +72,13 @@ author:
       url: "https://blog.lukeleigh.com"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
-      link: "https://twitter.com/luke_leighs"
+      url: "https://twitter.com/luke_leighs"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      link: "https://github.com/BanterBoy/PSCiscoMeraki"
+      url: "https://github.com/BanterBoy/PSCiscoMeraki"
     - label: "keybase"
       icon: "fab fa-fw fa-keybase"
-      link: "https://keybase.io/lukeleigh"
+      url: "https://keybase.io/lukeleigh"
 
 footer:
   links:
@@ -86,7 +86,7 @@ footer:
       icon: "fas fa-fw fa-envelope-square"
     - label: "Profile"
       icon: "fas fa-fw fa-link"
-      link: "https://velocv.com/lukeleigh"
+      url: "https://velocv.com/lukeleigh"
     - label: "adminTookit"
       icon: "fas fa-hashtag"
       url: "https://admintoolkit.lukeleigh.com"
@@ -95,13 +95,13 @@ footer:
       url: "https://blog.lukeleigh.com"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
-      link: "https://twitter.com/luke_leighs"
+      url: "https://twitter.com/luke_leighs"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      link: "https://github.com/BanterBoy/PSCiscoMeraki"
+      url: "https://github.com/BanterBoy/PSCiscoMeraki"
     - label: "keybase"
       icon: "fab fa-fw fa-keybase"
-      link: "https://keybase.io/lukeleigh"
+      url: "https://keybase.io/lukeleigh"
 
 defaults:
   # _posts
