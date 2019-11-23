@@ -18,10 +18,12 @@ tags:
 
 ## Installing PSCiscoMeraki
 
-Make sure you are running Powershell 5.0 (WMF 5.0). I don't know that it is a hard requirement at the moment but I plan on using 5.0 features.
+Make sure you are running Powershell 5.0 (WMF 5.0).
 
     # Install PSCiscoMeraki from the Powershell Gallery
     Find-Module PSCiscoMeraki | Install-Module
 
     # Import Module
     Import-Module PSCiscoMeraki
+
+[PSCiscoMeraki](https://www.powershellgallery.com/packages/PSCiscoMeraki/1.0.0)
