@@ -1,7 +1,7 @@
 locale: "en-GB"
 title: "PSCiscoMeraki"
 title_separator: "|"
-subtitle: "Blogsite for the GitHub Repository PSCiscoMeraki"
+subtitle: "Blogsite for the GitHub Repository #PSCiscoMeraki"
 name: "Luke Leigh"
 description: "Blogsite for the GitHub Repository PSCiscoMeraki - A PowerShell Module for the Cisco Meraki"
 url: "https://psciscomeraki.lukeleigh.com"
