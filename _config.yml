@@ -1,6 +1,7 @@
 locale: "en-GB"
 title: "PSCiscoMeraki"
 title_separator: "|"
+subtitle: "Blogsite for the GitHub Repository PSCiscoMeraki"
 name: "Luke Leigh"
 description: "Blogsite for the GitHub Repository PSCiscoMeraki - A PowerShell Module for the Cisco Meraki"
 url: "https://psciscomeraki.lukeleigh.com"
@@ -8,7 +9,7 @@ repository: "BanterBoy/PSCiscoMeraki"
 logo: "/assets/images/PowerShell_5.0_icon88x88.png"
 twitter_username: luke_leighs
 github_username: BanterBoy
-minimal_mistakes_skin: dark
+minimal_mistakes_skin: "dark" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum" "sunrise"
 search: true
 read_time: true
 
