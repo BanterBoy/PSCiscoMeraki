@@ -6,3 +6,19 @@ pull_request_rules:
     actions:
       merge:
         method: merge
+
+pull_request_rules:
+  - name: automatic merge for ImgBot pull requests
+    conditions:
+      - author=imgbot[bot]
+      - status-success=Travis CI - Pull Request
+    actions:
+      merge:
+        method: merge
+
+pull_request_rules:
+  - name: delete head branch after merge
+    conditions:
+      - merged
+    actions:
+      delete_head_branch: {}
