@@ -1,9 +1,8 @@
 pull_request_rules:
-  - name: automatic merge when passes and  review
+  - name: automatic merge when reviewed
     conditions:
-      - "#approved-reviews-by>=1"
-      - author=BanterBoy
-      - base=master
+      - "#approved-reviews-by=BanterBoy"
+      - status-success=Imgbot - Pull Request
     actions:
       merge:
         method: merge
