@@ -1,7 +1,11 @@
-# PSCiscoMeraki [![Mergify Status][mergify-status]][mergify]
+# PSCiscoMeraki
+
+[![Mergify Status][mergify-status]][mergify]
 
 [mergify]: https://mergify.io
 [mergify-status]: https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/BanterBoy/PSCiscoMeraki&style=flat
+
+[![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/Leigh-Services/PSCiscoMeraki)
 
 |name:| README.md |
 |-----|--|
