@@ -17,11 +17,11 @@ API Access is free but Rate Controlled and is limited to 5 calls per second (per
 In order to use this Module you will need an API Key from your Dashboard. For access to the API, first enable the API for your
 organisation under Organiation > Settings > Dashboard API access.
 
-![Enable API Access](https://raw.githubusercontent.com/BanterBoy/CiscoMeraki/master/assets/EnableAPIAccess.png)
+![Enable API Access](/assets/images/EnableAPIAccess.png)
 
 After enabling the API, go to the **my profile** page to generate an API key. The API key is associated with a Dashboard administrator account. You can generate, revoke, and regenerate your API key on your profile.
 
-![Generate API Key](https://raw.githubusercontent.com/BanterBoy/CiscoMeraki/master/assets/GenerateKey.png)
+![Generate API Key](/assets/images/GenerateKey.png)
 
 ****Note:*** Keep your API key safe as it provides authentication to all of your organizations with the API enabled. If your API key is shared, you can regenerate your API key at any time. This will revoke the existing API key.*
 
