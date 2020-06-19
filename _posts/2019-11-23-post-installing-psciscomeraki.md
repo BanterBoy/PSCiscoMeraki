@@ -55,7 +55,7 @@ This is "a work in progress" as I am working through the options that have been 
 
 The link below will take you to the module listing in the PowerShell Gallery.
 
-[PSCiscoMeraki](https://www.powershellgallery.com/packages/PSCiscoMeraki/1.0.0)
+[PSCiscoMeraki](https://www.powershellgallery.com/packages/PSCiscoMeraki)
 
 Make sure you are running Powershell 5.0 (WMF 5.0).
 
