@@ -7,6 +7,9 @@
 
 [![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/Leigh-Services/PSCiscoMeraki)
 
+[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/PSCovid19Stats?label=PSCovid19Stats&logo=powershell&style=plastic)][1]{:target="_blank"}
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSCovid19Stats?style=plastic)][1]{:target="_blank"}
+
 |name:| README.md |
 |-----|--|
 |  about:   | Generic details regarding this project. |
@@ -73,3 +76,5 @@ Get-MerakiVPNPeers
 This is "a work in progress" as I am working through the options that have been exposed via the API. Apologies for the state of the help, this module is not yet finished.
 
 [License](/LICENSE)
+
+[1]: https://www.powershellgallery.com/packages/PSCovid19Stats
