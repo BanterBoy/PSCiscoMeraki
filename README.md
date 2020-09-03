@@ -3,10 +3,8 @@
 [mergify]: https://mergify.io
 [mergify-status]: https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/BanterBoy/PSCiscoMeraki&style=plastic
 
-[![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/Leigh-Services/PSCiscoMeraki)
-
-[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/PSCovid19Stats?label=PSCovid19Stats&logo=powershell&style=plastic)](https://www.powershellgallery.com/packages/PSCovid19Stats)
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSCovid19Stats?style=plastic)](https://www.powershellgallery.com/packages/PSCovid19Stats)
+[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/PSCiscoMeraki?label=PSCiscoMeraki&logo=powershell&style=plastic)](https://www.powershellgallery.com/packages/PSCiscoMeraki)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSCiscoMeraki?style=plastic)](https://www.powershellgallery.com/packages/PSCiscoMeraki)
 
 |name:| README.md |
 |-----|--|
@@ -31,11 +29,11 @@ The Meraki Dashboard API is an interface for software to interact directly with 
 
 For access to the API, first enable the API for your organization under Organization > Settings > Dashboard API access.
 
-![Enable API Access](https://raw.githubusercontent.com/BanterBoy/PSCiscoMeraki/master/assets/images/EnableAPIAccess.png)
+![Enable API Access](https://blog.lukeleigh.com/assets/images/PSCiscoMeraki/EnableAPIAccess.png)
 
 After enabling the API, go to the **my profile** page to generate an API key. The API key is associated with a Dashboard administrator account. You can generate, revoke, and regenerate your API key on your profile.
 
-![Generate API Key](https://raw.githubusercontent.com/BanterBoy/PSCiscoMeraki/master/assets/images/GenerateKey.png)
+![Generate API Key](https://blog.lukeleigh.com/assets/images/PSCiscoMeraki/GenerateKey.png)
 
 ****Note:*** Keep your API key safe as it provides authentication to all of your organizations with the API enabled. If your API key is shared, you can regenerate your API key at any time. This will revoke the existing API key.*
 
