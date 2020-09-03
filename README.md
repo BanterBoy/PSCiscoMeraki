@@ -5,8 +5,6 @@
 [mergify]: https://mergify.io
 [mergify-status]: https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/BanterBoy/PSCiscoMeraki&style=plastic
 
-[![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/Leigh-Services/PSCiscoMeraki)
-
 [![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/PSCiscoMeraki?label=PSCiscoMeraki&logo=powershell&style=plastic)](https://www.powershellgallery.com/packages/PSCiscoMeraki)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSCiscoMeraki?style=plastic)](https://www.powershellgallery.com/packages/PSCiscoMeraki)
 
