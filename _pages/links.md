@@ -1,5 +1,0 @@
----
-permalink: /links/
-title: "Links"
----
-
