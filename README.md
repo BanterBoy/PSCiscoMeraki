@@ -7,8 +7,8 @@
 
 [![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/Leigh-Services/PSCiscoMeraki)
 
-[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/PSCovid19Stats?label=PSCovid19Stats&logo=powershell&style=plastic)](https://www.powershellgallery.com/packages/PSCovid19Stats)
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSCovid19Stats?style=plastic)](https://www.powershellgallery.com/packages/PSCovid19Stats)
+[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/PSCiscoMeraki?label=PSCiscoMeraki&logo=powershell&style=plastic)](https://www.powershellgallery.com/packages/PSCiscoMeraki)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSCiscoMeraki?style=plastic)](https://www.powershellgallery.com/packages/PSCiscoMeraki)
 
 |name:| README.md |
 |-----|--|
