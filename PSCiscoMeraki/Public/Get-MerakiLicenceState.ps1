@@ -100,17 +100,12 @@ function Get-MerakiLicenceState {
                     expirationDate       = $Lic.expirationDate
                     licensedDeviceCounts = $Lic.licensedDeviceCounts
                 }
-            }
-            catch {
-                $LicProperties = @{
-                    status               = $Lic.status
-                    expirationDate       = $Lic.expirationDate
-                    licensedDeviceCounts = $Lic.licensedDeviceCounts
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $LicProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

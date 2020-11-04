@@ -142,20 +142,12 @@ PROCESS {
     #             tags      = $Settings.tags
     #             orgAccess = $Settings.orgAccess
     #         }
-    #     }
-    #     catch {
-    #         $adminProperties = @{
-    #             name      = $Settings.name
-    #             email     = $Settings.email
-    #             id        = $Settings.id
-    #             networks  = $Settings.networks
-    #             tags      = $Settings.tags
-    #             orgAccess = $Settings.orgAccess
-    #         }
-    #     }
-    #     finally {
+    #
     #         $obj = New-Object -TypeName PSObject -Property $adminProperties
     #         Write-Output $obj
+    #     }
+    #     catch {
+    #         Write-Host "Failed with error: $_.Message" -ForegroundColor Red
     #     }
     # }
 

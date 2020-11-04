@@ -113,18 +113,12 @@
                     SAMLUrl  = $Org.samlConsumerUrl
                     SAMLUrls = $Org.samlConsumerUrls
                 }
-            }
-            catch {
-                $OrgProperties = @{
-                    ID       = $Org.id
-                    Name     = $Org.name
-                    SAMLUrl  = $Org.samlConsumerUrl
-                    SAMLUrls = $Org.samlConsumerUrls
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $OrgProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

@@ -116,23 +116,12 @@ function Get-MerakiTraffic {
                     activeTime  = $Settings.activeTime
                     flows       = $Settings.flows
                 }
-            }
-            catch {
-                $trafficProperties = @{
-                    application = $Settings.application
-                    destination = $Settings.destination
-                    protocol    = $Settings.protocol
-                    port        = $Settings.port
-                    sent        = $Settings.sent
-                    recv        = $Settings.recv
-                    numClients  = $Settings.numClients
-                    activeTime  = $Settings.activeTime
-                    flows       = $Settings.flows
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $trafficProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

@@ -92,19 +92,12 @@ function Get-MerakiVLANList {
                     applianceIp = $Settings.applianceIp
                     subnet      = $Settings.subnet
                 }
-            }
-            catch {
-                $vlansProperties = @{
-                    id          = $Settings.id
-                    networkId   = $Settings.networkId
-                    name        = $Settings.name
-                    applianceIp = $Settings.applianceIp
-                    subnet      = $Settings.subnet
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $vlansProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

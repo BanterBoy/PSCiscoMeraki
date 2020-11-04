@@ -92,18 +92,12 @@ function Get-MerakiVPNPeers {
                     privateSubnets = $Settings.privateSubnets
                     secret         = $Settings.secret
                 }
-            }
-            catch {
-                $thirdPartyVPNPeersProperties = @{
-                    name           = $Settings.name
-                    publicIp       = $Settings.publicIp
-                    privateSubnets = $Settings.privateSubnets
-                    secret         = $Settings.secret
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $thirdPartyVPNPeersProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

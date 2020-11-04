@@ -119,23 +119,12 @@ function Get-MerakiDeviceUplink {
                     dns           = $Device.dns
                     usingStaticIP = $Device.usingStaticIP
                 }
-            }
-            catch {
-                $DeviceProperties = @{
-                    networkID     = $NetID
-                    serial        = $serialNo
-                    interface     = $Device.interface
-                    status        = $Device.status
-                    ip            = $Device.ip
-                    gateway       = $Device.gateway
-                    publicIp      = $Device.publicIp
-                    dns           = $Device.dns
-                    usingStaticIP = $Device.usingStaticIP
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $DeviceProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

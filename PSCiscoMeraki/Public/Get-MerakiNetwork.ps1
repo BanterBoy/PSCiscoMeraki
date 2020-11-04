@@ -93,21 +93,12 @@ function Get-MerakiNetwork {
                     timeZone           = $Settings.timeZone
                     type               = $Settings.type
                 }
-            }
-            catch {
-                $networksProperties = @{
-                    disableMyMerakiCom = $Settings.disableMyMerakiCom
-                    id                 = $Settings.id
-                    name               = $Settings.name
-                    organizationId     = $Settings.organizationId
-                    tags               = $Settings.tags
-                    timeZone           = $Settings.timeZone
-                    type               = $Settings.type
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $networksProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
