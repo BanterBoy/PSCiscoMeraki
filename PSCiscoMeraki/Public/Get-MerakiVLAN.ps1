@@ -102,22 +102,12 @@ function Get-MerakiVLAN {
                     reservedIpRanges   = $Settings.reservedIpRanges
                     dnsNameservers     = $Settings.dnsNameservers
                 }
-            }
-            catch {
-                $vlansProperties = @{
-                    id                 = $Settings.id
-                    networkId          = $Settings.networkId
-                    name               = $Settings.name
-                    applianceIp        = $Settings.applianceIp
-                    subnet             = $Settings.subnet
-                    fixedIpAssignments = $Settings.fixedIpAssignments
-                    reservedIpRanges   = $Settings.reservedIpRanges
-                    dnsNameservers     = $Settings.dnsNameservers
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $vlansProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

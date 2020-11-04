@@ -110,20 +110,12 @@ function Get-MerakiNetworkList {
                     tags           = $Settings.tags
                     type           = $Settings.type
                 }
-            }
-            catch {
-                $networksProperties = @{
-                    id             = $Settings.id
-                    organizationId = $Settings.organizationId
-                    name           = $Settings.name
-                    timeZone       = $Settings.timeZone
-                    tags           = $Settings.tags
-                    type           = $Settings.type
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $networksProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

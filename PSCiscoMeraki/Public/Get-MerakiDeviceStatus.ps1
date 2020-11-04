@@ -107,21 +107,12 @@ function Get-MerakiDeviceStatus {
                     serial    = $item.serial
                     status    = $item.status
                 }
-            }
-            catch {
-                $DeviceProperties = @{
-                    lanIp     = $item.lanIp
-                    mac       = $item.mac
-                    name      = $item.name
-                    networkId = $item.networkId
-                    publicIp  = $item.publicIp
-                    serial    = $item.serial
-                    status    = $item.status
-                }
-            }
-            finally {
+
                 $obj = New-Object -TypeName PSObject -Property $DeviceProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

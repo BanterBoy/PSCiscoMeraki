@@ -110,20 +110,12 @@ function Get-MerakiDeviceInventory {
                     claimedAt = $Device.claimedAt
                     publicIp  = $Device.publicIp
                 }
-            }
-            catch {
-                $DeviceProperties = @{
-                    mac       = $Device.mac
-                    serial    = $Device.serial
-                    networkId = $Device.networkId
-                    model     = $Device.model
-                    claimedAt = $Device.claimedAt
-                    publicIp  = $Device.publicIp
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $DeviceProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

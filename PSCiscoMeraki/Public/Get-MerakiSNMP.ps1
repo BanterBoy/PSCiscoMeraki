@@ -95,21 +95,12 @@ function Get-MerakiSNMP {
                     hostname   = $Settings.hostname
                     port       = $Settings.port
                 }
-            }
-            catch {
-                $SNMPProperties = @{
-                    v2cEnabled = $Settings.v2cEnabled
-                    v3Enabled  = $Settings.v3Enabled
-                    v3AuthMode = $Settings.v3AuthMode
-                    v3PrivMode = $Settings.v3PrivMode
-                    peerIps    = $Settings.peerIps
-                    hostname   = $Settings.hostname
-                    port       = $Settings.port
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $SNMPProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

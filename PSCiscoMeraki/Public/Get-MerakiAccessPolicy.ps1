@@ -105,19 +105,12 @@ function Get-MerakiAccessPolicy {
                     guestVlan     = $Settings.guestVlan
                     radiusServers = $Settings.radiusServers
                 }
-            }
-            catch {
-                $accessPoliciesProperties = @{
-                    number        = $Settings.number
-                    name          = $Settings.name
-                    accessType    = $Settings.accessType
-                    guestVlan     = $Settings.guestVlan
-                    radiusServers = $Settings.radiusServers
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $accessPoliciesProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

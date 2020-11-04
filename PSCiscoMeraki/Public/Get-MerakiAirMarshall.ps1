@@ -123,22 +123,12 @@ function Get-MerakiAirMarshall {
           wiredVlans    = $Settings.wiredVlans
           wiredLastSeen = $Settings.wiredLastSeen
         }
-      }
-      catch {
-        $timespanProperties = @{
-          ssid          = $Settings.ssid
-          bssids        = $Settings.bssids
-          channels      = $Settings.channels
-          firstSeen     = $Settings.firstSeen
-          lastSeen      = $Settings.lastSeen
-          wiredMacs     = $Settings.wiredMacs
-          wiredVlans    = $Settings.wiredVlans
-          wiredLastSeen = $Settings.wiredLastSeen
-        }
-      }
-      finally {
+        
         $obj = New-Object -TypeName PSObject -Property $timespanProperties
         Write-Output $obj
+      }
+      catch {
+        Write-Host "Failed with error: $_.Message" -ForegroundColor Red
       }
     }
   }

@@ -104,17 +104,12 @@ function Get-MerakiSitetoSite {
                     hubs    = $Settings.hubs
                     subnets = $Settings.subnets
                 }
-            }
-            catch {
-                $siteToSiteVpnProperties = @{
-                    mode    = $Settings.mode
-                    hubs    = $Settings.hubs
-                    subnets = $Settings.subnets
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $siteToSiteVpnProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }

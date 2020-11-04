@@ -99,21 +99,12 @@ function Get-MerakiBluetooth {
                     minor                    = $Settings.minor
                     type                     = $Settings.type
                 }
-            }
-            catch {
-                $bluetoothSettingsProperties = @{
-                    scanningEnabled          = $Settings.scanningEnabled
-                    advertisingEnabled       = $Settings.advertisingEnabled
-                    uuid                     = $Settings.uuid
-                    majorMinorAssignmentMode = $Settings.majorMinorAssignmentMode
-                    major                    = $Settings.major
-                    minor                    = $Settings.minor
-                    type                     = $Settings.type
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $bluetoothSettingsProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
