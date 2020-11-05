@@ -1,7 +1,5 @@
 function Get-MerakiAccessPolicy {
-
     <#
-    
     .SYNOPSIS
     Short function to provide details for an access policy configured on a specific network ID. Only valid for MS networks.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -9,16 +7,21 @@ function Get-MerakiAccessPolicy {
     .DESCRIPTION
     Short function to provide details for an access policy configured on a specific network ID. Only valid for MS networks.
 
-    This function queries the Cisco Meraki API service https://dashboard.meraki.com/api/v0 and will be needed for use with additional
-    commands within the module.
+    This function queries the Cisco Meraki API service <https://dashboard.meraki.com/api/v0> and will be needed for use with additional commands within the module.
 
     API Access is free but Rate Controlled and is limited to 5 calls per second (per organisation).
 
-    In order to use this Module you will need an API Key from your Dashboard. For access to the API, first enable the API for your
-    organisation under Organiation > Settings > Dashboard API access.
+    In order to use this Module you will need an API Key from your Dashboard. For access to the API, first enable the API for your organisation under Organiation > Settings > Dashboard API access.
 
-    After enabling the API, go to the my profile page to generate an API key. The API key is associated with a Dashboard administrator account.
-    You can generate, revoke, and regenerate your API key on your profile.
+    ![Enable API Access](https://raw.githubusercontent.com/BanterBoy/CiscoMeraki/master/assets/EnableAPIAccess.png)
+
+    After enabling the API, go to the **my profile** page to generate an API key. The API key is associated with a Dashboard administrator account. You can generate, revoke, and regenerate your API key on your profile.
+
+    ![Generate API Key](https://raw.githubusercontent.com/BanterBoy/CiscoMeraki/master/assets/GenerateKey.png)
+
+    ****Note:*** Keep your API key safe as it provides authentication to all of your organizations with the API enabled. If your API key is shared, you can regenerate your API key at any time. This will revoke the existing API key.*
+
+    ****Note*** that SAML dashboard administrators cannot view or generate API keys.*
 
     .EXAMPLE
     Get-MerakiNetworks -ApiKey APIKeyGoesHere -NetworkID NetIDGoesHere
@@ -27,7 +30,7 @@ function Get-MerakiAccessPolicy {
     .INPUTS
     Accepts Api Key as piped input.
     Accepts Organisation ID as piped input.
-
+    
     .OUTPUTS
     The output from the API is sent as JSON and captured in a custom object.
     [
@@ -37,20 +40,20 @@ function Get-MerakiAccessPolicy {
             "accessType": "8021.x",
             "guestVlan": 3700,
             "radiusServers": [
-            {
-                "ip": "1.2.3.4",
-                "port": 1337
-            },
-            {
-                "ip": "2.3.4.5",
-                "port": 1337
-            }
+                {
+                    "ip": "1.2.3.4",
+                    "port": 1337
+                },
+                {
+                    "ip": "2.3.4.5",
+                    "port": 1337
+                }
             ]
         }
     ]
-
+            
     You can then select the items that you want to display.
-
+            
     .NOTES
     Author:     Luke Leigh
     Website:    https://blog.lukeleigh.com/
@@ -60,11 +63,10 @@ function Get-MerakiAccessPolicy {
 
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
-
-    #>
-
+#>
+            
     [CmdletBinding()]
-    
+            
     param(
         [Parameter(Mandatory = $True,
             ValueFromPipeline = $True,
@@ -87,7 +89,7 @@ function Get-MerakiAccessPolicy {
         $Uri = @{
             "accessPolicies" = "https://api.meraki.com/api/v0/networks/$NetworkID/accessPolicies"
         }
-
+        
         $accessPolicies = Invoke-RestMethod -Method GET -Uri $Uri.accessPolicies -Headers @{
             'X-Cisco-Meraki-API-Key' = "$ApiKey"
             'Content-Type'           = 'application/json'
@@ -103,19 +105,12 @@ function Get-MerakiAccessPolicy {
                     guestVlan     = $Settings.guestVlan
                     radiusServers = $Settings.radiusServers
                 }
-            }
-            catch {
-                $accessPoliciesProperties = @{
-                    number        = $Settings.number
-                    name          = $Settings.name
-                    accessType    = $Settings.accessType
-                    guestVlan     = $Settings.guestVlan
-                    radiusServers = $Settings.radiusServers
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $accessPoliciesProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -125,9 +120,7 @@ function Get-MerakiAccessPolicy {
 }
 
 function Get-MerakiAdminList {
-    
     <#
-    
     .SYNOPSIS
     Short function to list organizations admin users which will be needed to use with other commands within this module.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -221,7 +214,7 @@ function Get-MerakiAdminList {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -265,20 +258,12 @@ function Get-MerakiAdminList {
                     tags      = $Settings.tags
                     orgAccess = $Settings.orgAccess
                 }
-            }
-            catch {
-                $adminProperties = @{
-                    name      = $Settings.name
-                    email     = $Settings.email
-                    id        = $Settings.id
-                    networks  = $Settings.networks
-                    tags      = $Settings.tags
-                    orgAccess = $Settings.orgAccess
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $adminProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -287,9 +272,7 @@ function Get-MerakiAdminList {
 }
 
 function Get-MerakiAirMarshall {
-
     <#
-
       .SYNOPSIS
       Short function to provide details for an access policy configured on a specific network ID.
       In order to use this Module you will need an API Key from your Dashboard.
@@ -413,22 +396,12 @@ function Get-MerakiAirMarshall {
                     wiredVlans    = $Settings.wiredVlans
                     wiredLastSeen = $Settings.wiredLastSeen
                 }
-            }
-            catch {
-                $timespanProperties = @{
-                    ssid          = $Settings.ssid
-                    bssids        = $Settings.bssids
-                    channels      = $Settings.channels
-                    firstSeen     = $Settings.firstSeen
-                    lastSeen      = $Settings.lastSeen
-                    wiredMacs     = $Settings.wiredMacs
-                    wiredVlans    = $Settings.wiredVlans
-                    wiredLastSeen = $Settings.wiredLastSeen
-                }
-            }
-            finally {
+          
                 $obj = New-Object -TypeName PSObject -Property $timespanProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -437,9 +410,7 @@ function Get-MerakiAirMarshall {
 }
 
 function Get-MerakiBluetooth {
-
     <#
-
     .SYNOPSIS
     Short function to provide details for Bluetooth settings configured on the Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -494,7 +465,7 @@ function Get-MerakiBluetooth {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -539,21 +510,12 @@ function Get-MerakiBluetooth {
                     minor                    = $Settings.minor
                     type                     = $Settings.type
                 }
-            }
-            catch {
-                $bluetoothSettingsProperties = @{
-                    scanningEnabled          = $Settings.scanningEnabled
-                    advertisingEnabled       = $Settings.advertisingEnabled
-                    uuid                     = $Settings.uuid
-                    majorMinorAssignmentMode = $Settings.majorMinorAssignmentMode
-                    major                    = $Settings.major
-                    minor                    = $Settings.minor
-                    type                     = $Settings.type
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $bluetoothSettingsProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -562,9 +524,7 @@ function Get-MerakiBluetooth {
 }
 
 function Get-MerakiDeviceInventory {
-
     <#
-
     .SYNOPSIS
     Short function to provide an inventory of all Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -631,7 +591,7 @@ function Get-MerakiDeviceInventory {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -675,20 +635,12 @@ function Get-MerakiDeviceInventory {
                     claimedAt = $Device.claimedAt
                     publicIp  = $Device.publicIp
                 }
-            }
-            catch {
-                $DeviceProperties = @{
-                    mac       = $Device.mac
-                    serial    = $Device.serial
-                    networkId = $Device.networkId
-                    model     = $Device.model
-                    claimedAt = $Device.claimedAt
-                    publicIp  = $Device.publicIp
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $DeviceProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -697,9 +649,7 @@ function Get-MerakiDeviceInventory {
 }
 
 function Get-MerakiDeviceStatus {
-
     <#
-
     .SYNOPSIS
     Short function to list Device Status.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -762,7 +712,7 @@ function Get-MerakiDeviceStatus {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -807,21 +757,12 @@ function Get-MerakiDeviceStatus {
                     serial    = $item.serial
                     status    = $item.status
                 }
-            }
-            catch {
-                $DeviceProperties = @{
-                    lanIp     = $item.lanIp
-                    mac       = $item.mac
-                    name      = $item.name
-                    networkId = $item.networkId
-                    publicIp  = $item.publicIp
-                    serial    = $item.serial
-                    status    = $item.status
-                }
-            }
-            finally {
+
                 $obj = New-Object -TypeName PSObject -Property $DeviceProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -829,14 +770,14 @@ function Get-MerakiDeviceStatus {
     END { }
 }
 
-
 function Get-MerakiDeviceUplink {
 
     <#
+
     .SYNOPSIS
     Short function to list Uplinks.
     In order to use this Module you will need an API Key from your Dashboard.
-    The code for this function was supplied by Darrell Porter.
+	The code for this function was supplied by Darrell Porter.
 
     .DESCRIPTION
     Short function to list Device Status.
@@ -859,7 +800,7 @@ function Get-MerakiDeviceUplink {
     Accepts Api Key as piped input.
     Accepts Network ID as piped input.
     Accepts Device Serial Number as piped input.
-    (All inputs are mandatory).
+	(All inputs are mandatory).
 
     .OUTPUTS
     The output from the API is received as JSON and captured in a custom object.
@@ -898,7 +839,7 @@ function Get-MerakiDeviceUplink {
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
     #>
-    
+
     [CmdletBinding()]
 
     param(
@@ -950,23 +891,12 @@ function Get-MerakiDeviceUplink {
                     dns           = $Device.dns
                     usingStaticIP = $Device.usingStaticIP
                 }
-            }
-            catch {
-                $DeviceProperties = @{
-                    networkID     = $NetID
-                    serial        = $serialNo
-                    interface     = $Device.interface
-                    status        = $Device.status
-                    ip            = $Device.ip
-                    gateway       = $Device.gateway
-                    publicIp      = $Device.publicIp
-                    dns           = $Device.dns
-                    usingStaticIP = $Device.usingStaticIP
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $DeviceProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -975,9 +905,7 @@ function Get-MerakiDeviceUplink {
 }
 
 function Get-MerakiLicenceState {
-
     <#
-
     .SYNOPSIS
     Short function to list organizations licences.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -1034,7 +962,7 @@ function Get-MerakiLicenceState {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -1078,17 +1006,12 @@ function Get-MerakiLicenceState {
                     expirationDate       = $Lic.expirationDate
                     licensedDeviceCounts = $Lic.licensedDeviceCounts
                 }
-            }
-            catch {
-                $LicProperties = @{
-                    status               = $Lic.status
-                    expirationDate       = $Lic.expirationDate
-                    licensedDeviceCounts = $Lic.licensedDeviceCounts
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $LicProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -1097,9 +1020,7 @@ function Get-MerakiLicenceState {
 }
 
 function Get-MerakiNetwork {
-
     <#
-
     .SYNOPSIS
     Short function to provide details for an individual network configured on the Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -1148,7 +1069,7 @@ function Get-MerakiNetwork {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -1193,21 +1114,12 @@ function Get-MerakiNetwork {
                     timeZone           = $Settings.timeZone
                     type               = $Settings.type
                 }
-            }
-            catch {
-                $networksProperties = @{
-                    disableMyMerakiCom = $Settings.disableMyMerakiCom
-                    id                 = $Settings.id
-                    name               = $Settings.name
-                    organizationId     = $Settings.organizationId
-                    tags               = $Settings.tags
-                    timeZone           = $Settings.timeZone
-                    type               = $Settings.type
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $networksProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -1216,9 +1128,7 @@ function Get-MerakiNetwork {
 }
 
 function Get-MerakiNetworkList {
-
     <#
-
     .SYNOPSIS
     Short function to provide a list of networks configured on the Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -1285,7 +1195,7 @@ function Get-MerakiNetworkList {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -1329,20 +1239,12 @@ function Get-MerakiNetworkList {
                     tags           = $Settings.tags
                     type           = $Settings.type
                 }
-            }
-            catch {
-                $networksProperties = @{
-                    id             = $Settings.id
-                    organizationId = $Settings.organizationId
-                    name           = $Settings.name
-                    timeZone       = $Settings.timeZone
-                    tags           = $Settings.tags
-                    type           = $Settings.type
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $networksProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -1351,9 +1253,7 @@ function Get-MerakiNetworkList {
 }
 
 function Get-MerakiOrganisation {
-
     <#
-
     .SYNOPSIS
     Short function to list organizations the user has access to which will be needed to use with other commands within this module.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -1425,7 +1325,7 @@ function Get-MerakiOrganisation {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -1467,18 +1367,12 @@ function Get-MerakiOrganisation {
                     SAMLUrl  = $Org.samlConsumerUrl
                     SAMLUrls = $Org.samlConsumerUrls
                 }
-            }
-            catch {
-                $OrgProperties = @{
-                    ID       = $Org.id
-                    Name     = $Org.name
-                    SAMLUrl  = $Org.samlConsumerUrl
-                    SAMLUrls = $Org.samlConsumerUrls
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $OrgProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -1487,9 +1381,7 @@ function Get-MerakiOrganisation {
 }
 
 function Get-MerakiSitetoSite {
-
     <#
-
     .SYNOPSIS
     Short function to provide details for site to site Vpn's configured on the Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -1553,7 +1445,7 @@ function Get-MerakiSitetoSite {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -1594,17 +1486,12 @@ function Get-MerakiSitetoSite {
                     hubs    = $Settings.hubs
                     subnets = $Settings.subnets
                 }
-            }
-            catch {
-                $siteToSiteVpnProperties = @{
-                    mode    = $Settings.mode
-                    hubs    = $Settings.hubs
-                    subnets = $Settings.subnets
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $siteToSiteVpnProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -1613,9 +1500,7 @@ function Get-MerakiSitetoSite {
 }
 
 function Get-MerakiSNMP {
-
     <#
-
     .SYNOPSIS
     Short function to provide SNMP Details.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -1666,7 +1551,7 @@ function Get-MerakiSNMP {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -1711,21 +1596,12 @@ function Get-MerakiSNMP {
                     hostname   = $Settings.hostname
                     port       = $Settings.port
                 }
-            }
-            catch {
-                $SNMPProperties = @{
-                    v2cEnabled = $Settings.v2cEnabled
-                    v3Enabled  = $Settings.v3Enabled
-                    v3AuthMode = $Settings.v3AuthMode
-                    v3PrivMode = $Settings.v3PrivMode
-                    peerIps    = $Settings.peerIps
-                    hostname   = $Settings.hostname
-                    port       = $Settings.port
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $SNMPProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -1734,9 +1610,7 @@ function Get-MerakiSNMP {
 }
 
 function Get-MerakiTraffic {
-
     <#
-
     .SYNOPSIS
     Short function to provide details for site to site Vpn's configured on the Meraki Devices.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -1801,7 +1675,7 @@ function Get-MerakiTraffic {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -1853,23 +1727,12 @@ function Get-MerakiTraffic {
                     activeTime  = $Settings.activeTime
                     flows       = $Settings.flows
                 }
-            }
-            catch {
-                $trafficProperties = @{
-                    application = $Settings.application
-                    destination = $Settings.destination
-                    protocol    = $Settings.protocol
-                    port        = $Settings.port
-                    sent        = $Settings.sent
-                    recv        = $Settings.recv
-                    numClients  = $Settings.numClients
-                    activeTime  = $Settings.activeTime
-                    flows       = $Settings.flows
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $trafficProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -1878,9 +1741,7 @@ function Get-MerakiTraffic {
 }
 
 function Get-MerakiVLAN {
-
     <#
-
     .SYNOPSIS
     Short function to provide details for VLANs configured on a specific network ID.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -1931,7 +1792,7 @@ function Get-MerakiVLAN {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -1983,22 +1844,12 @@ function Get-MerakiVLAN {
                     reservedIpRanges   = $Settings.reservedIpRanges
                     dnsNameservers     = $Settings.dnsNameservers
                 }
-            }
-            catch {
-                $vlansProperties = @{
-                    id                 = $Settings.id
-                    networkId          = $Settings.networkId
-                    name               = $Settings.name
-                    applianceIp        = $Settings.applianceIp
-                    subnet             = $Settings.subnet
-                    fixedIpAssignments = $Settings.fixedIpAssignments
-                    reservedIpRanges   = $Settings.reservedIpRanges
-                    dnsNameservers     = $Settings.dnsNameservers
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $vlansProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -2007,9 +1858,7 @@ function Get-MerakiVLAN {
 }
 
 function Get-MerakiVLANList {
-
     <#
-
     .SYNOPSIS
     Short function to provide details for VLANs configured on a specific network ID.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -2059,7 +1908,7 @@ function Get-MerakiVLANList {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -2102,19 +1951,12 @@ function Get-MerakiVLANList {
                     applianceIp = $Settings.applianceIp
                     subnet      = $Settings.subnet
                 }
-            }
-            catch {
-                $vlansProperties = @{
-                    id          = $Settings.id
-                    networkId   = $Settings.networkId
-                    name        = $Settings.name
-                    applianceIp = $Settings.applianceIp
-                    subnet      = $Settings.subnet
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $vlansProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
@@ -2123,9 +1965,7 @@ function Get-MerakiVLANList {
 }
 
 function Get-MerakiVPNPeers {
-
     <#
-
     .SYNOPSIS
     Short function to provide third Party VPN Peer Details.
     In order to use this Module you will need an API Key from your Dashboard.
@@ -2176,7 +2016,7 @@ function Get-MerakiVPNPeers {
     .LINK
     https://github.com/BanterBoy/CiscoMeraki/wiki
 
-    #>
+#>
 
     [CmdletBinding()]
 
@@ -2218,18 +2058,12 @@ function Get-MerakiVPNPeers {
                     privateSubnets = $Settings.privateSubnets
                     secret         = $Settings.secret
                 }
-            }
-            catch {
-                $thirdPartyVPNPeersProperties = @{
-                    name           = $Settings.name
-                    publicIp       = $Settings.publicIp
-                    privateSubnets = $Settings.privateSubnets
-                    secret         = $Settings.secret
-                }
-            }
-            finally {
+                
                 $obj = New-Object -TypeName PSObject -Property $thirdPartyVPNPeersProperties
                 Write-Output $obj
+            }
+            catch {
+                Write-Host "Failed with error: $_.Message" -ForegroundColor Red
             }
         }
     }
